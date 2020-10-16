@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head th:fragment="standardHead">
+			<!-- Required meta tags -->
+		    <meta charset="utf-8">
+		    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+		    <!-- Bootstrap CSS -->
+		    <link rel="stylesheet" type="text/css" href="css/responsiveForm.css"/>
+		    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+	</head>
+	
+	<body>
+		<div th:fragment="myNavbar">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			  <a class="navbar-brand" href="/about">4222</a>
+			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			    <span class="navbar-toggler-icon"></span>
+			  </button>
+			  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+			    <ul class="navbar-nav mr-auto">
+			      <li class="nav-item">
+			        <a class="nav-link" href="/admin/orders">Orders</a>
+			      </li>
+			      <li class="nav-item">
+			        <a class="nav-link" href="/admin/items">Items</a>
+			      </li>
+			      <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+			        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			          [[${#httpServletRequest.remoteUser}]]
+			        </a>
+			        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+			          <a class="dropdown-item" th:href="@{'/user/'+${#httpServletRequest.remoteUser}}">Show</a>
+			          <a class="dropdown-item" th:href="@{'/user/'+${#httpServletRequest.remoteUser}}">Edit</a>
+			          <a class="dropdown-item" href="/help">Help me</a>
+			          <div class="dropdown-divider"></div>
+			          <a class="dropdown-item" href="/customLogout">Logout</a>
+			        </div>
+			      </li>
+			    </ul>
+			  </div>
+			</nav>
+			<!-- Optional JavaScript -->
+		    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		    <script src="/js/jquery-3.4.1.slim.min.js"></script>
+		    <script src="/js/popper.min.js"></script>
+		    <script src="/js/bootstrap.min.js"></script>	
+		</div>
+	</body>
+</html>

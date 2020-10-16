@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Service Table</title>
+
+	<link rel="stylesheet" href="/css/bootstrap.min.css"/>
+	<link th:rel="stylesheet" th:href="@{/css/datatables.css}"/>
+
+</head>
+<body>
+
+<!-- Navigation -->
+<header th:insert="fragments/navbar.html :: myNavbar"> </header>
+<div th:fragment="overview_single_service">
+
+	<div class="container div-center" style="padding-top: 20px">
+	    	<form id="editForm" th:action="@{/api/service}" th:object="${ServiceOverview}" th:method="PUT">
+	    	  <div class="form-group">
+			    <label for="userName"><Strong>Username</Strong></label>
+			    <p id="username"></p>
+			  </div>
+			  <div class="form-group">
+			    <label for="firstName1"><strong>First Name</strong></label>
+			    <input type="text" class="form-control" id="firstName" name="firstName">
+			  </div>
+			  <div class="form-group">
+			    <label for="lastName1"><strong>Last Name</strong></label>
+			    <input type="text" class="form-control" id="lastName" name="lastName">
+			  </div>
+			  <div class="form-group">
+			    <label for="exampleInputEmail1"><strong>Email address</strong></label>
+			    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" required>
+			    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+			  </div>
+			  <button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+			<P></P>
+	        <button style="background-color: lightgrey" class="btn btn-default" data-toggle="modal" data-target="#myModal" id="add">Change Password</button>
+    	</div>
+    	
+    	
+    	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title">Create new Service</h4>
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	      </div>
+	      <div class="modal-body">
+	        <form id="serviceForm" th:action="@{/service}" th:object="${ObservableService}" method="post">
+			  <div class="form-group">
+			    <label for="exampleInputPassword1">Password</label>
+			    <input type="password" class="form-control" id="oldPassword" name="oldPassword" required>
+			  </div>
+			  <div class="form-group">
+			    <label for="exampleInputPassword1">Password</label>
+			    <input type="password" class="form-control" id="password" name="password" required>
+			  </div>
+			  <div class="form-group">
+			    <label for="exampleInputPassword2">Confirm Password</label>
+			    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+			  </div>
+			  <button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button id="closeModal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+		
+	  </div>
+	</div>
+	
+
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/formToJson.min.js}"></script>
+	
+	<script>
+		var set_delay = 5000;
+	    callout = function () {
+	    	var pageURL = window.location.href;
+	    	var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
+	        $.ajax({
+	            "url": "/api/user/" + lastURLSegment,
+	            "type": "GET",
+	            "dataType": "json",
+	            "contentType": "application/json",
+	            "data": function (d) {
+	                return JSON.stringify(d);
+	            }
+	        })
+	        .done(function (response) {
+	        	document.getElementById("username").textContent = response.username;
+	        	console.log($("#editForm").data("changed"));
+	        	if($("#editForm").data("changed")){
+	        		
+	        	} else {
+		        	document.getElementById("firstName").value = response.firstName;
+		        	document.getElementById("lastName").value = response.lastName;
+		        	document.getElementById("email").value = response.email;
+		        	$("#editForm").data("changed",true);
+	        	}
+	        	$("#editForm :input").change(function() {
+	        		   $("#editForm").data("changed",true);
+	        		});
+	        })
+	        .fail(function (jqXHR, textStatus, errorThrown) {
+	        	alert("Connection to monitoring service lost");
+	        })
+	        .always(function () {
+	            setTimeout(callout, set_delay);
+	        });
+	    };
+	
+	// initial call
+	callout();
+	</script>
+	
+	<script>
+	$(document).ready(function(){
+	    var form = $('#editForm');
+	    form.submit(function(e) {
+	        // prevent form submission
+	        e.preventDefault();
+	        var pageURL = window.location.href;
+	    	var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
+	    	console.log(lastURLSegment);
+	        // submit the form via Ajax
+	        console.log(JSON.stringify(form.serializeArray()));
+	        $.ajax({
+	            "url": "/api/user/" + lastURLSegment,
+	            "type": "PUT",
+	            "dataType": "json",
+	            "contentType": "application/json",
+	            "data": JSON.stringify($("#editForm").formToJson()),
+	            success: function(result) {
+	            	alert("Successfully edited  Service. \nAttention, it can take up to a minute for the server to check if the edited service is online!");
+	            	$("#editForm").data("changed",false);
+	            	console.log("success");
+	            },
+	        	error: function(result) {
+	        		console.log(form.attr('action') + '/' + lastURLSegment)
+	            	alert("Failed to edit user\n"+result.getResponseHeader("User"));
+	        	}
+	        });
+	    });
+	});
+	</script>
+	
+	<script>
+	$(document).ready(function(){
+	    var form = $('#serviceForm');
+	    form.submit(function(e) {
+	        // prevent form submission
+	        var pageURL = window.location.href;
+	    	var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
+	        e.preventDefault();
+	        var xhr = $.ajax({
+	            "url": "/api/user/" + lastURLSegment + "/password",
+	            "type": "PUT",
+	            "dataType": "json",
+	            "contentType": "application/json",
+	            "data": JSON.stringify($("#serviceForm").formToJson()),
+	            success: function(result) {
+	            	document.getElementById("closeModal").click();
+	            	alert(xhr.getResponseHeader("User"));
+	            },
+	        	error: function(result) {
+	            	alert("Error");
+	        	}
+	        });
+	    });
+	});
+	</script>
+	
+	<script>
+	    	var password = document.getElementById("password"), confirm_password = document.getElementById("confirm_password");
+	
+	    	function validatePassword(){
+	    	  if(password.value != confirm_password.value) {
+	    	    confirm_password.setCustomValidity("Passwords don't match");
+	    	  } else {
+	    	    confirm_password.setCustomValidity('');
+	    	  }
+	    	}
+	
+	    	password.onchange = validatePassword;
+	    	confirm_password.onkeyup = validatePassword;
+    	</script>
+
+</div>
+
+</body>
+</html>

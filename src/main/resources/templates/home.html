@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+    	<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+		<!-- Bootstrap CSS -->	
+		<link rel="stylesheet" href="/css/bootstrap.min.css"/>
+	<link th:rel="stylesheet" th:href="@{/css/datatables.css}"/>
+        <title>Home</title>
+    </head>
+    <body>
+		<div class="container div-center" style="padding-top: 20px">
+	    	<form th:object="${}" method="post">
+			  <div class="form-group form-check" th:each="item: ${items}">
+			    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+			    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+			  </div>
+			  <button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+    	</div>
+    </body>
+</html>

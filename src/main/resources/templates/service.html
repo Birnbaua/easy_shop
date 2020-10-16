@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Service Table</title>
+
+	<link rel="stylesheet" href="/css/bootstrap.min.css"/>
+	<link th:rel="stylesheet" th:href="@{/css/datatables.css}"/>
+
+</head>
+<body>
+
+<!-- Navigation -->
+<header th:insert="fragments/navbar.html :: myNavbar"> </header>
+<div th:fragment="overview_single_service">
+
+	<div class="container div-center" style="padding-top: 20px">
+	    	<form id="editForm" th:action="@{/api/service}" th:object="${ServiceOverview}" th:method="PUT">
+	    	  <div class="form-group">
+			    <label for="userName1"><Strong>ID</Strong></label>
+			    <p id="id"></p>
+			  </div>
+			  <div class="form-group">
+			    <label for="userName1"><strong>Name</strong></label>
+			    <input type="text" class="form-control" id="name" name="name" required>
+			  </div>
+			  <div class="form-group">
+			    <label for="firstName1"><strong>Url</strong></label>
+			    <input type="text" class="form-control" id="url" name="url">
+			  </div>
+			  <div class="form-group">
+			    <label for="lastName1"><strong>Description</strong></label>
+			    <textarea class="form-control" id="desc" name="desc" rows="8"></textarea>
+			  </div>
+			  <div class="form-group">
+			    <label for="exampleInputEmail1"><strong>Status</strong></label>
+			    <p id="status"></p>
+			  </div>
+			  <button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+    	</div>
+
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/formToJson.min.js}"></script>
+	
+	<script>
+		var set_delay = 5000;
+	    callout = function () {
+	    	var pageURL = window.location.href;
+	    	var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
+	        $.ajax({
+	            "url": "/api/service/" + lastURLSegment,
+	            "type": "GET",
+	            "dataType": "json",
+	            "contentType": "application/json",
+	            "data": function (d) {
+	                return JSON.stringify(d);
+	            }
+	        })
+	        .done(function (response) {
+	        	$("#editForm :input").change(function() {
+	        		   $("#editForm").data("changed",true);
+	        		});
+	        	document.getElementById("id").textContent = response.id;
+	        	console.log($("#editForm").data("changed"));
+	        	if($("#editForm").data("changed")){
+	        		
+	        	} else {
+		        	document.getElementById("name").value = response.name;
+		        	document.getElementById("url").value = response.url;
+		        	document.getElementById("desc").value = response.desc;
+		        	$("#editForm").data("changed",true);
+	        	}
+	        	document.getElementById("status").textContent = response.status;
+	        })
+	        .fail(function (jqXHR, textStatus, errorThrown) {
+	        	alert("Connection to monitoring service lost");
+	        })
+	        .always(function () {
+	            setTimeout(callout, set_delay);
+	        });
+	    };
+	
+	// initial call
+	callout();
+	</script>
+	
+	<script>
+	$(document).ready(function(){
+	    var form = $('#editForm');
+	    form.submit(function(e) {
+	        // prevent form submission
+	        e.preventDefault();
+	        var pageURL = window.location.href;
+	    	var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
+	    	console.log(lastURLSegment);
+	        // submit the form via Ajax
+	        console.log(JSON.stringify(form.serializeArray()));
+	        $.ajax({
+	            "url": "/api/service/" + lastURLSegment,
+	            "type": "PUT",
+	            "dataType": "json",
+	            "contentType": "application/json",
+	            "data": JSON.stringify($("#editForm").formToJson()),
+	            success: function(result) {
+	            	alert("Successfully edited  Service. \nAttention, it can take up to a minute for the server to check if the edited service is online!");
+	            	$("#editForm").data("changed",false);
+	            	console.log("success");
+	            },
+	        	error: function(result) {
+	        		console.log(form.attr('action') + '/' + lastURLSegment)
+	            	alert("Failed to edit service\n"+result.getResponseHeader("Service"));
+	        	}
+	        });
+	    });
+	});
+	</script>
+
+</div>
+
+</body>
+</html>

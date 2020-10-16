@@ -1,0 +1,16 @@
+.custom-center {
+	margin: auto;
+	width: 100%;
+	padding-top: 20px;
+	padding-right: 35%;
+	padding-left: 35%;
+}
+
+@media only screen and (max-width: 1079px) {
+.custom-center {
+	margin: auto;
+	width: 100%;
+	padding-top: 20px;
+	padding-right: 5%;
+	padding-left: 5%;
+}
