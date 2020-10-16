@@ -2,10 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Luke, I am your father">
     <title>Order Table</title>
 	<link rel="stylesheet" href="/css/bootstrap.min.css"/>
 	<link th:rel="stylesheet" th:href="@{/css/datatables.css}"/>
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style type="text/css">
 	    .table-row{
 		cursor:pointer;
@@ -93,7 +97,7 @@
 		if(confirm("Do you want to delete the order with id: " + index + "?")) {
 			var xhr = $.ajax({
 	            "url": "/api/order/" + index,
-	            "type": "PUT",
+	            "type": "DELETE",
 	            "dataType": "json",
 	            "contentType": "application/json",
 	            "data": null,

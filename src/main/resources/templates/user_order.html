@@ -2,17 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8"/>
-    <title>Item Table</title>
-	<link rel="stylesheet" href="/css/bootstrap.min.css"/>
-	<link th:rel="stylesheet" th:href="@{/css/datatables.css}"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <style type="text/css">
-	    .table-row{
-		cursor:pointer;
-	}</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Luke, I am your father">
+    <title>Easy Shop</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="container div-center" style="padding-top: 20px">
@@ -35,9 +30,9 @@
 	    </div>
 	</div>
 	
-	<script th:src="@{/js/jquery.min.js}"></script>
 	<script th:src="@{/js/formToJson.min.js}"></script>
 	
+	<!-- Post order to service -->
 	<script>
 	$(document).ready(function(){
 	    var form = $('#orderForm');
@@ -75,7 +70,7 @@
 	            	window.location.reload(false); 
 	            },
 	        	error: function(result) {
-	            	alert(result.getResponseHeader("Order"));
+	            	alert(xhr.getResponseHeader("Order"));
 	            	window.location.reload(false); 
 	        	}
 	        });

@@ -2,13 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Luke, I am your father">
     <title>Item Table</title>
 	<link rel="stylesheet" href="/css/bootstrap.min.css"/>
 	<link th:rel="stylesheet" th:href="@{/css/datatables.css}"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style type="text/css">
 	    .table-row{
 		cursor:pointer;
@@ -23,12 +24,19 @@
 	    <div class="row">
 	        <div class="col-lg-10 mt-5 mb-5">
 	            <table id="itemTable" class="table table-striped" style="width: 100%">
+	                <colgroup>
+				       <col span="1" style="width: 20%;">
+				       <col span="1" style="width: 45%;">
+				       <col span="1" style="width: 10%;">
+				       <col span="1" style="width: 15%;">
+				    </colgroup>
 	                <thead>
-	                <tr>
-	                    <th>Name</th>
-	                    <th>Description</th>
-	                    <th>Maximal amount</th>
-	                </tr>
+		                <tr>
+		                    <th>Name</th>
+		                    <th>Description</th>
+		                    <th>Price</th>
+		                    <th>Maximal amount</th>
+		                </tr>
 	                </thead>
 	            </table>
 	        </div>
@@ -85,7 +93,7 @@
 	<script th:src="@{/js/jquery.min.js}"></script>
 	<script th:src="@{/js/formToJson.min.js}"></script>
 	
-	<!-- refresh script -->
+	<!-- load items from service -->
 	<script>
 		var set_delay = 2000;
 		var tableId = document.getElementById("itemTable");
@@ -123,9 +131,8 @@
             		}
 	                event_data += '<td>'+value.name+'</td>';
 	                event_data += '<td>'+value.desc+'</td>';
+	                event_data += '<td>'+value.price+ ' €' +'</td>';
 	                event_data += '<td>'+value.maxAmount+'</td>';
-	                event_data += '';
-	                event_data += '';
 	                event_data += '</tr>';
 	            });
 	            $("#itemTable").append(event_data);
@@ -139,7 +146,7 @@
 	callout();
 	</script>
 	
-	<!-- Make item row deleteable -->
+	<!-- Make item row deletable -->
 	<script type="text/javascript">
 	fillModal = function(index,desc,price,maxAmount) {
 		console.log(index)
@@ -174,6 +181,8 @@
 	}
 	</script>
 	
+	
+	<!-- post item to service -->
 	<script>
 	$(document).ready(function(){
 	    var form = $('#itemForm');
