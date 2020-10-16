@@ -72,7 +72,7 @@ public class UserController {
 	@GetMapping("/home")
 	public String getOverview(@RequestParam(required = true) String table, Model model) {
 		model.addAttribute("table_nr", table);
-		model.addAttribute("items",is.getAll());
+		model.addAttribute("items",is.getAllAvaliable());
 		return "user_order";
 	}
 

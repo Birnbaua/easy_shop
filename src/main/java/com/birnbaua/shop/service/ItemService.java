@@ -22,6 +22,10 @@ public class ItemService {
 		return ir.findAll();
 	}
 	
+	public List<Item> getAllAvaliable() {
+		return ir.findAllAvaliable();
+	}
+	
 	public Item deleteById(String id) {
 		Item item = null;
 		item = ir.getOne(id);
