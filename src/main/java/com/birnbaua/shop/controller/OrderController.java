@@ -3,6 +3,8 @@ package com.birnbaua.shop.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +24,15 @@ import com.birnbaua.shop.service.OrderService;
 @RequestMapping("/api/order")
 public class OrderController {
 	
+	private static final Log LOG = LogFactory.getLog(OrderController.class);
+	
 	@Autowired
 	private OrderService os;
 	
 	@PostMapping
 	public ResponseEntity<Order> postOrder(@RequestBody Order order) {
 		try {
+			LOG.info("Recived new order");
 			order.setOrderPos(order.getOrderPos().stream().filter(x -> x.getAmount() > 0).collect(Collectors.toList()));
 			os.save(order);
 		} catch(Exception e) {
