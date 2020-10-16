@@ -37,7 +37,7 @@ public class ItemController {
 			e.printStackTrace();
 			return ResponseEntity.badRequest().header("Item", "Something went wrong while creating your item").body(item);
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).header("Item", "Successfully created an item").body(item);
+		return ResponseEntity.status(HttpStatus.CREATED).header("Item", "Successfully saved item with name: " + item.getName()).body(item);
 	}
 	
 	@GetMapping()
@@ -49,7 +49,7 @@ public class ItemController {
 			e.printStackTrace();
 			return ResponseEntity.badRequest().header("Item", "Something went wrong while fetching the items from the database").body(items);
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).header("Item", "Successfully fetched all items from the database").body(items);
+		return ResponseEntity.status(HttpStatus.CREATED).header("Item", "Successfully fetched all avaliable items from the database").body(items);
 	}
 	
 	@PutMapping("/{id}")
@@ -75,7 +75,7 @@ public class ItemController {
 			e.printStackTrace();
 			return ResponseEntity.badRequest().header("Item", "Something went wrong while creating your item").body(item);
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).header("Item", "Successfully created an item").body(item);
+		return ResponseEntity.status(HttpStatus.CREATED).header("Item", "Successfully deleted item with name: " + item.getName()).body(item);
 	}
 
 }
