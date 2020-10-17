@@ -47,7 +47,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	}
 	
 	public User initSave(User user) {
-		if(userRepository.findByUsername(user.getUsername()).isEmpty()) {
+		if(!userRepository.findByUsername(user.getUsername()).isPresent()) {
 			return changePW(user);
 		} else {
 			throw new EntityExistsException("User with username " + user.getUsername() + " already exists.");
