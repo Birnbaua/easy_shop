@@ -11,7 +11,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "sales_order")
@@ -26,11 +32,20 @@ public class Order {
 	
 	@Column(name = "is_open")
 	private Boolean isOpen = true;
+	
+	@Column(name = "total_price")
+	private Double price;
 
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.MERGE})
 	@JoinColumn(name = "order_id")
 	private List<OrderPos> orderPos = new LinkedList<>();
-
+	
+	@Transient
+	@PostLoad
+	private void calcPrice() {
+		this.price = orderPos.stream().mapToDouble(x -> x.getAmount() * x.getItem().getPrice()).sum();
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -61,5 +76,13 @@ public class Order {
 
 	public void setIsOpen(Boolean isOpen) {
 		this.isOpen = isOpen;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 }
