@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.birnbaua.shop.log.LoggingHelper;
 import com.birnbaua.shop.order.Item;
 import com.birnbaua.shop.service.ItemService;
 
@@ -30,14 +31,18 @@ public class ItemController {
 	
 	@PostMapping()
 	public ResponseEntity<Item> postItem(@RequestBody Item item) {
+		String msg = null;
 		try {
 			is.save(item);
-			LOG.info("Created new item: " + item.getName() + " with price: " + item.getPrice() + " and a maximal amount: " + item.getMaxAmount());
+			msg = "Created new item: " + item.getName() + " with price: " + item.getPrice() + " and a maximal amount: " + item.getMaxAmount();
+			LOG.info(msg);
 		} catch(Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().header("Item", "Something went wrong while creating your item").body(item);
+			msg = "Something went wrong while creating your item. Error msg: " + e.getMessage();
+			LOG.error(msg);
+			LoggingHelper.logStackTrace(LOG, e);
+			return ResponseEntity.badRequest().header("Item", msg).body(item);
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).header("Item", "Successfully saved item with name: " + item.getName()).body(item);
+		return ResponseEntity.status(HttpStatus.CREATED).header("Item", msg).body(item);
 	}
 	
 	@GetMapping()
@@ -46,7 +51,7 @@ public class ItemController {
 		try {
 			items = is.getAll();
 		} catch(Exception e) {
-			e.printStackTrace();
+			LoggingHelper.logStackTrace(LOG, e);
 			return ResponseEntity.badRequest().header("Item", "Something went wrong while fetching the items from the database").body(items);
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).header("Item", "Successfully fetched all avaliable items from the database").body(items);
@@ -54,28 +59,35 @@ public class ItemController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Item> editItem(@PathVariable String id, @RequestBody Item item) {
+		String msg = null;
 		item.setName(id);
 		try {
 			is.save(item);
-			LOG.info("Edited item: " + item.getName() + " with price: " + item.getPrice() + " and a maximal amount: " + item.getMaxAmount());
+			msg = "Edited new item: " + item.getName() + " with price: " + item.getPrice() + " and a maximal amount: " + item.getMaxAmount();
+			LOG.info(msg);
 		} catch(Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().header("Item", "Something went wrong while editing your item").body(item);
+			msg = "Something went wrong while editing your item. Error msg: " + e.getMessage();
+			LOG.error(msg);
+			LoggingHelper.logStackTrace(LOG, e);
+			return ResponseEntity.badRequest().header("Item", msg).body(item);
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).header("Item", "Successfully edited an item").body(item);
+		return ResponseEntity.status(HttpStatus.CREATED).header("Item", msg).body(item);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Item> deleteItem(@PathVariable String id) {
 		Item item = null;
+		String msg = null;
 		try {
 			item = is.deleteById(id);
-			LOG.info("Deleted item: " + item.getName() + " with price: " + item.getPrice() + " and a maximal amount: " + item.getMaxAmount());
+			msg = "Deleted item: " + item.getName() + " with price: " + item.getPrice() + " and a maximal amount: " + item.getMaxAmount();
+			LOG.info(msg);
 		} catch(Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().header("Item", "Something went wrong while creating your item").body(item);
+			msg = "Something went wrong while deleting your item. Error msg: " + e.getMessage();
+			LoggingHelper.logStackTrace(LOG, e);
+			return ResponseEntity.badRequest().header("Item", msg).body(item);
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).header("Item", "Successfully deleted item with name: " + item.getName()).body(item);
+		return ResponseEntity.status(HttpStatus.CREATED).header("Item", msg).body(item);
 	}
 
 }

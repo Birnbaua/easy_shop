@@ -3,6 +3,8 @@ package com.birnbaua.shop.controller;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,11 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.birnbaua.shop.auth.CustomUserDetailsService;
 import com.birnbaua.shop.auth.UserRole;
+import com.birnbaua.shop.log.LoggingHelper;
 import com.birnbaua.shop.order.User;
 import com.birnbaua.shop.service.ItemService;
 
 @Controller
 public class UserController {
+	
+	private static final Log LOG = LogFactory.getLog(UserController.class);
 	
 	@Autowired
 	private CustomUserDetailsService us;
@@ -33,8 +38,10 @@ public class UserController {
 		us.initSave(user);
 		try {
 			request.login(un, pw);
+			LOG.info("Created new user with username: " + user.getUsername() + " and email: " + user.getEmail());
 		} catch (ServletException e) {
-			e.printStackTrace();
+			LOG.error("Something went wrong creating the user with username: " + user.getUsername() + " and email: " + user.getEmail());
+			LoggingHelper.logStackTrace(LOG, e);
 		}
 		return "redirect:/admin/orders";
 	}

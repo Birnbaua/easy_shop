@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.birnbaua.shop.log.LoggingHelper;
 import com.birnbaua.shop.order.Order;
 import com.birnbaua.shop.service.OrderService;
 
@@ -31,15 +32,19 @@ public class OrderController {
 	
 	@PostMapping
 	public ResponseEntity<Order> postOrder(@RequestBody Order order) {
+		String msg = null;
 		try {
-			LOG.info("Recived new order");
 			order.setOrderPos(order.getOrderPos().stream().filter(x -> x.getAmount() > 0).collect(Collectors.toList()));
 			os.save(order);
+			msg = "Successfully created an order with id: " + order.getId();
+			LOG.info(msg);
 		} catch(Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().header("Order", "Something went wrong while creating your order").body(order);
+			msg = "Something went wrong while creating your order. Error message: " + e.getMessage();
+			LOG.error(msg);
+			LoggingHelper.logStackTrace(LOG, e);
+			return ResponseEntity.badRequest().header("Order", msg).body(order);
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).header("Order", "Successfully created an order").body(order);
+		return ResponseEntity.status(HttpStatus.CREATED).header("Order", msg).body(order);
 	}
 	
 	@GetMapping
@@ -48,33 +53,44 @@ public class OrderController {
 		try {
 			orders = os.getOpenOrders();
 		} catch(Exception e) {
-			e.printStackTrace();
+			LoggingHelper.logStackTrace(LOG, e);
 			return ResponseEntity.badRequest().header("Order", "Something went wrong fetching open orders from server").body(orders);
 		}
 		return ResponseEntity.status(HttpStatus.OK).header("Order", "Successfully fetched all open orders").body(orders);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Order> editOrder(@PathVariable Long id) {
-		Order order = null;
+	public ResponseEntity<Order> editOrder(@PathVariable Long id, @RequestBody Order order) {
+		String msg = null;
+		order.setId(id);
 		try {
-			order = os.setIsDone(id);
+			order.setOrderPos(order.getOrderPos().stream().filter(x -> x.getAmount() > 0).collect(Collectors.toList()));
+			os.save(order);
+			msg = "Successfully edited an order with id: " + order.getId();
+			LOG.info(msg);
 		} catch(Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().header("Order", "Something went wrong while editing your order").body(order);
+			msg = "Something went wrong while edited your order. Error message: " + e.getMessage();
+			LOG.error(msg);
+			LoggingHelper.logStackTrace(LOG, e);
+			return ResponseEntity.badRequest().header("Order", msg).body(order);
 		}
-		return ResponseEntity.status(HttpStatus.OK).header("Order", "Successfully edited an order").body(order);
+		return ResponseEntity.status(HttpStatus.CREATED).header("Order", msg).body(order);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Order> deleteOrder(@PathVariable Long id) {
 		Order order = null;
+		String msg = null;
 		try {
 			order = os.deleteById(id);
+			msg = "Successfully deleted order with id: " + id;
+			LOG.info(msg);
 		} catch(Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().header("Order", "Something went wrong deleting your order").body(order);
+			msg = "Something went wrong deleting order with id: " + id + ". Error Message: " + e.getMessage();
+			LOG.error(msg);
+			LoggingHelper.logStackTrace(LOG, e);
+			return ResponseEntity.badRequest().header("Order", msg).body(order);
 		}
-		return ResponseEntity.status(HttpStatus.OK).header("Order", "Successfully deleted an order").body(order);
+		return ResponseEntity.status(HttpStatus.OK).header("Order", msg).body(order);
 	}
 }
