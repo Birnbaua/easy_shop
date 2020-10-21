@@ -18,7 +18,7 @@
 <body>
 
 <!-- Navigation -->
-<header th:insert="fragments/navbar.html :: myNavbar"> </header>
+<div th:insert="fragments/navbar.html :: myNavbar"> </div>
 <div th:fragment="overview">
 	<div class="container">
 	    <div class="row">
@@ -99,7 +99,7 @@
 		var tableId = document.getElementById("itemTable");
 	    callout = function () {
 	        $.ajax({
-	            "url": "/api/item",
+	            "url": "/api/"+ document.getElementById('shop').innerHTML +"/item",
 	            "type": "GET",
 	            "dataType": "json",
 	            "contentType": "application/json",
@@ -143,7 +143,7 @@
 	    };
 	
 	// initial call
-	callout();
+	$(document).ready(callout());
 	</script>
 	
 	<!-- Make item row deletable -->
@@ -164,7 +164,7 @@
 		console.log(index)
 		if(confirm("Do you want to delete this item?")) {
 			var xhr = $.ajax({
-	            "url": "/api/item/" + index,
+	            "url": "/api/"+ document.getElementById("shop").innerHTML +"/item/" + index,
 	            "type": "DELETE",
 	            "dataType": "json",
 	            "contentType": "application/json",
@@ -188,14 +188,18 @@
 	    var form = $('#itemForm');
 	    form.submit(function(e) {
 	        // prevent form submission
-	        console.log(JSON.stringify($("#itemForm").formToJson()));
 	        e.preventDefault();
+	        var data = JSON.stringify($("#itemForm").formToJson());
+	        var shopvalue = document.getElementById("shop").innerHTML;
+	        var shopdata = "\"shop\":{\"name\":\"" + shopvalue + "\"},";
+	        data = [data.slice(0, 1), shopdata, data.slice(1)].join('');
+	        console.log(data);
 	        var xhr = $.ajax({
-	            "url": "/api/item",
+	            "url": "/api/"+ document.getElementById("shop").innerHTML +"/item",
 	            "type": "POST",
 	            "dataType": "json",
 	            "contentType": "application/json",
-	            "data": JSON.stringify($("#itemForm").formToJson()),
+	            "data": data,
 	            success: function(result) {
 	            	alert(xhr.getResponseHeader("Item")+"\nAttention, it can take up to a minute for the server to check if the edited service is online!");
 	            	document.getElementById("closeModal").click();

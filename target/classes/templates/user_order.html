@@ -9,12 +9,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
-<body>
+<body>	
 	<div class="container div-center" style="padding-top: 20px">
 		<h2 style="text-align:center"><strong>Sauf oder Stirb!</strong></h2>
+	</div>	
+	<div class="container div-center" style="padding-top: 10px">
+		<h4 style="text-align:left"><span>Shop: </span><strong id="shop">[[${shop}]]</strong></h4>
 	</div>
-	<div class="container div-center" style="padding-top: 20px">
-		<h4 id="table_id">Tisch [[${table_nr}]]</h4>
+	<div class="container div-center" style="padding-top: 0px">
+		<h4 id="table_id">Tisch: [[${table_nr}]]</h4>
 	</div>
 	<div th:fragment="overview" style="overflow-x: auto">
 		<div class="container div-center" style="padding-top: 20px; padding-bottom: 20px">
@@ -39,13 +42,17 @@
 	    var form = $('#orderForm');
 	    form.submit(function(e) {
 	        e.preventDefault();
-	        var obj = '{"table":"';
+	        var shopvalue = "\"shop\":{\"name\":\"" + document.getElementById("shop").innerHTML + "\"},";
+	        var obj = "{";
+	        obj += shopvalue;
+	        obj += '"table":"';
 	        obj += '[[${table_nr}]]' + '",';
 	        obj += '"orderPos":[';
 	        var arr = form.serializeArray();
 	        for(var i = 0; i < arr.length; i++){
 	        	obj +='{';
 	        		obj +='"item":{';
+	        			obj += shopvalue;
 	        			obj +='"name":"'
 	        			obj +=arr[i].name;
 	        			obj +='"';
@@ -61,7 +68,7 @@
 	        obj += ']}'
 	        console.log(obj);
 	        var xhr = $.ajax({
-	            "url": "/api/order",
+	            "url": "/api/"+ document.getElementById("shop").innerHTML +"/order",
 	            "type": "POST",
 	            "dataType": "json",
 	            "contentType": "application/json",

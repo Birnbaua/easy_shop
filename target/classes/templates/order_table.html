@@ -24,7 +24,7 @@
 	            <table id="orderTable" class="table table-striped" style="width: 100%">
 	                <thead>
 	                <tr>
-	                    <th>ID</th>
+	                    <th>Nr</th>
 	                    <th>Table</th>
 	                    <th>Order</th>
 	                    <th>Price €</th>
@@ -42,13 +42,11 @@
 		var tableId = document.getElementById("orderTable");
 	    callout = function () {
 	        $.ajax({
-	            "url": "/api/order",
+	            "url": "/api/"+ document.getElementById("shop").innerHTML +"/order",
 	            "type": "GET",
 	            "dataType": "json",
 	            "contentType": "application/json",
-	            "data": function (d) {
-	                return JSON.stringify(d);
-	            }
+	            "data": null
 	        })
 	        .fail(function (jqXHR, textStatus, errorThrown) {
 	        	alert("Connection to ordering service lost");
@@ -59,14 +57,14 @@
 	            $.each(response, function(index, value){
 	            	if(value.isOpen == true) {
 	            		if(index % 2 == 0) {
-	            			event_data += '<tr onclick="showAlert(' + value.id + ')" style="cursor: pointer" bgcolor="#D8D8D8">';
+	            			event_data += '<tr onclick="showAlert(' + value.nr + ')" style="cursor: pointer" bgcolor="#D8D8D8">';
 	            		} else {
-	            			event_data += '<tr onclick="showAlert(' + value.id + ')" style="cursor: pointer" bgcolor="white">';
+	            			event_data += '<tr onclick="showAlert(' + value.nr + ')" style="cursor: pointer" bgcolor="white">';
 	            		}
 	            	} else if(value.isOpen == false) {
-		                event_data += '<tr onclick="showAlert(' + value.id + ')" style="cursor: pointer" bgcolor="lightsalmon">';
+		                event_data += '<tr onclick="showAlert(' + value.nr + ')" style="cursor: pointer" bgcolor="lightsalmon">';
 	            	}
-	                event_data += '<td>'+value.id+'</td>';
+	                event_data += '<td>'+value.nr+'</td>';
 	                event_data += '<td>'+value.table+'</td>';
 	                
 	                event_data += '<td>';
@@ -96,7 +94,7 @@
 		console.log(index)
 		if(confirm("Do you want to delete the order with id: " + index + "?")) {
 			var xhr = $.ajax({
-	            "url": "/api/order/" + index,
+	            "url": "/api/"+ document.getElementById("shop").innerHTML + "/order/" + index,
 	            "type": "DELETE",
 	            "dataType": "json",
 	            "contentType": "application/json",
