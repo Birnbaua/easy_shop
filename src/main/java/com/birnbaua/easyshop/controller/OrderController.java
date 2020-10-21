@@ -55,8 +55,8 @@ public class OrderController {
 			LOG.info(msg);
 		} catch(Exception e) {
 			msg = "Something went wrong while creating your order. Error message: " + e.getMessage();
-//			LOG.error(msg);
-//			LoggingHelper.logStackTrace(LOG, e);
+			LOG.error(msg);
+			LoggingHelper.logStackTrace(LOG, e);
 			return ResponseEntity.badRequest().header("Order", msg).body(order);
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).header("Order", msg).body(order);

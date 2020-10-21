@@ -53,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.and().httpBasic()
 			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
 			.and().rememberMe()
-			.and().formLogin().loginPage("/login").defaultSuccessUrl("/admin/orders")
+			.and().formLogin().loginPage("/login").defaultSuccessUrl("/admin")
             .and()
             .logout()
             .permitAll();
