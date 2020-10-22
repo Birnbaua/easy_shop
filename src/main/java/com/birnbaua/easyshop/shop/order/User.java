@@ -48,6 +48,10 @@ public class User extends BaseEntity {
 		
 	}
 	
+	public User(String owner) {
+		this.username = owner;
+	}
+	
 	public User(User user) {
 		this.username = user.username;
 		this.password = user.password;

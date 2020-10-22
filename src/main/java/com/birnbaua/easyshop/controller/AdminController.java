@@ -18,10 +18,10 @@ public class AdminController {
 	@Autowired
 	private ShopService ss;
 	
-//	@GetMapping()
-//	public String getAdminPage() {
-//		return "admin_page";
-//	}
+	@GetMapping()
+	public String getAdminPage() {
+		return "shop_table";
+	}
 	
 	@GetMapping("{name}/items")
 	public String items(@PathVariable String name, Model model, HttpServletRequest request) {

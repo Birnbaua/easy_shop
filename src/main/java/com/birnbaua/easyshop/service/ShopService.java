@@ -29,6 +29,7 @@ public class ShopService {
 	public Shop deleteById(String id) {
 		Shop shop = null;
 		shop = getShopById(id);
+		sr.deleteById(id);
 		return shop;
 	}
 	

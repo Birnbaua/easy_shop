@@ -1,0 +1,222 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Luke, I am your father">
+    <title>Item Table</title>
+	<link rel="stylesheet" href="/css/bootstrap.min.css"/>
+	<link th:rel="stylesheet" th:href="@{/css/datatables.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style type="text/css">
+	    .table-row{
+		cursor:pointer;
+	}</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div th:insert="fragments/navbar.html :: myNavbar"> </div>
+<div th:fragment="overview">
+	<div class="container">
+	    <div class="row">
+	        <div class="col-lg-10 mt-5 mb-5">
+	            <table id="shopTable" class="table table-striped" style="width: 100%">
+	                <colgroup>
+				       <col span="1" style="width: 20%;">
+				       <col span="1" style="width: 35%;">
+				       <col span="1" style="width: 45%;">
+				    </colgroup>
+	                <thead>
+		                <tr>
+		                    <th>Name</th>
+		                    <th>Owner</th>
+		                    <th>Description</th>
+		                </tr>
+	                </thead>
+	            </table>
+	        </div>
+	    </div>
+	</div>
+	
+	<div class="container" role="toolbar" id="lettersToolbar">
+	    <div class="btn-group mr-2" style="padding-bottom: 20px">
+	        <button class="btn btn-default" data-toggle="modal" data-target="#myModal" style="background-color: #337ab7" id="add">Add new Shop</button>
+	    </div>
+	</div>
+	
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title">Create new Shop</h4>
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	      </div>
+	      <div class="modal-body">
+	        <form id="shopForm" th:object="${Item}" method="post">
+			  <div class="form-group">
+			    <label for="name1">Name</label>
+			    <input type="text" class="form-control" id="name1" name="name" required>
+			  </div>
+			  <div class="form-group">
+			    <label for="owner1">Owner</label>
+			    <input type="text" class="form-control" id="owner1" name="owner">
+			  </div>
+			  <div class="form-group">
+			    <label for="desc">Description</label>
+			    <input type="text" class="form-control" id="desc1" name="desc">
+			  </div>
+			  <button type="submit" class="btn btn-primary">Save</button>
+			  <button type="button" class="btn btn-danger" onclick="deleteAlert(document.getElementById('name1').value)">Delete</button>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button id="closeModal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+
+		
+	  </div>
+	</div>
+	
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/formToJson.min.js}"></script>
+	
+	<!-- load items from service -->
+	<script>
+		var set_delay = 2000;
+		var tableId = document.getElementById("shopTable");
+	    callout = function () {
+	        $.ajax({
+	            "url": "/api/shop",
+	            "type": "GET",
+	            "dataType": "json",
+	            "contentType": "application/json",
+	            "data": function (d) {
+	                return JSON.stringify(d);
+	            }
+	        })
+	        .fail(function (jqXHR, textStatus, errorThrown) {
+	        	alert("Connection to shop service lost");
+	        })
+	        .done(function (response) {
+	        	var event_data = '';
+	        	$("#shopTable").find("tr:gt(0)").remove();;
+	            $.each(response, function(index, value){
+            		if(index % 2 == 0) {
+            			event_data += '<tr onclick="fillModal(\'' 
+            					+ value.name + '\',\'';
+            			if(value.owner == null) {
+            				event_data += '' + '\',\'';
+            			} else {
+            				event_data += value.owner.username + '\',\'';
+            			}
+            			event_data += value.desc
+            					+ '\')" style="cursor: pointer" bgcolor="#D8D8D8">';
+            		} else {
+            			event_data += '<tr onclick="fillModal(\'' 
+        					+ value.name + '\',\'';
+	        			if(value.owner == null) {
+	        				event_data += '' + '\',\'';
+	        			} else {
+	        				event_data += value.owner.username + '\',\'';
+	        			}
+	        			event_data += value.desc
+        					+ '\')" style="cursor: pointer" bgcolor="white">';
+            		}
+	                event_data += '<td>'+value.name+'</td>';
+	                
+	       			if(value.owner == null) {
+	       				event_data += '<td>'+'no_owner'+'</td>';
+        			} else {
+        				event_data += '<td>'+value.owner.username+'</td>';
+        			}
+	                event_data += '<td>'+ value.desc +'</td>';
+	                event_data += '</tr>';
+	            });
+	            $("#shopTable").append(event_data);
+	        })
+	        .always(function () {
+	            setTimeout(callout, set_delay);
+	        });
+	    };
+	
+	// initial call
+	$(document).ready(callout());
+	</script>
+	
+	<!-- fill modal -->
+	<script type="text/javascript">
+	fillModal = function(index,owner,desc) {
+		console.log(index)
+		document.getElementById("name1").value = index;
+		document.getElementById("desc1").value = desc;
+		document.getElementById("owner1").value = owner;
+		document.getElementById("add").click();
+	}
+	</script>
+	
+	<!-- Make shop row deleteable -->
+	<script type="text/javascript">
+	deleteAlert = function(index) {
+		console.log(index)
+		if(confirm("Do you want to delete this shop?")) {
+			var xhr = $.ajax({
+	            "url": "/api/shop/" + index,
+	            "type": "DELETE",
+	            "dataType": "json",
+	            "contentType": "application/json",
+	            "data": null,
+	            success: function(res) {
+	            	alert(xhr.getResponseHeader("Shop"));
+	            	document.getElementById("closeModal").click();
+	            },
+	        	error: function(result) {
+	            	alert(xhr.getResponseHeader("Shop"));
+	        	}
+	        });
+		}
+	}
+	</script>
+	
+	
+	<!-- post shop to service -->
+	<script>
+	$(document).ready(function(){
+	    var form = $('#shopForm');
+	    form.submit(function(e) {
+	        // prevent form submission
+	        e.preventDefault();
+	        var shop_json = $("#shopForm").formToJson();
+	        if(shop_json.owner.length == 0) {
+	        	shop_json.owner = null;
+	        }
+	        var data = JSON.stringify(shop_json);
+	        console.log(data);
+	        var xhr = $.ajax({
+	            "url": "/api/shop",
+	            "type": "POST",
+	            "dataType": "json",
+	            "contentType": "application/json",
+	            "data": data,
+	            success: function(result) {
+	            	alert(xhr.getResponseHeader("Shop")+"\nAttention, it can take some seconds for the new shop to go online!");
+	            	document.getElementById("closeModal").click();
+	            },
+	        	error: function(result) {
+	            	alert(xhr.getResponseHeader("Shop"));
+	        	}
+	        });
+	    });
+	});
+	</script>
+
+</div>
+
+</body>
+</html>
