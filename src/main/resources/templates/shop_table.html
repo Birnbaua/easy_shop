@@ -129,7 +129,7 @@
 	        			event_data += value.desc
         					+ '\')" style="cursor: pointer" bgcolor="white">';
             		}
-	                event_data += '<td>'+value.name+'</td>';
+	                event_data += '<td><a href=\"/admin/'+ value.name +'/orders\"<div>'+value.name+'</div></a></td>';
 	                
 	       			if(value.owner == null) {
 	       				event_data += '<td>'+'no_owner'+'</td>';

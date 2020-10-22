@@ -52,7 +52,7 @@ public class AdminController {
 	private boolean isAuthorized(String shop, HttpServletRequest request) throws NullPointerException {
 		if(request.isUserInRole("ROLE_ADMIN")) {
 			return true;
-		} else if(ss.getShopById(shop).getName().equals(request.getUserPrincipal().getName())) {
+		} else if(ss.getShopById(shop).getOwner().getUsername().equals(request.getUserPrincipal().getName())) {
 			return true;
 		}
 		return false;
