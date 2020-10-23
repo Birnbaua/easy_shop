@@ -81,7 +81,7 @@ public class UserController {
 	public String getOverview(@PathVariable String shop, @RequestParam(required = true) String table, Model model) {
 		model.addAttribute("table_nr", table);
 		model.addAttribute("shop", shop);
-		model.addAttribute("items",is.getAllAvaliable());
+		model.addAttribute("items",is.getAll(shop));
 		return "user_order";
 	}
 

@@ -10,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 
  * @author Birnbaua
@@ -20,18 +22,22 @@ import org.springframework.data.annotation.LastModifiedBy;
 @MappedSuperclass
 public class BaseEntity {
 	
+	@JsonIgnore
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)
 	private Timestamp createdAt;
 	
+	@JsonIgnore
 	@UpdateTimestamp
 	@Column(name = "updated_at")
 	private Timestamp updatedAt;
 	
+	@JsonIgnore
 	@CreatedBy
 	@Column(name = "created_by", updatable = false)
 	private String createdBy = "auto_generated";
 	
+	@JsonIgnore
 	@LastModifiedBy
 	@Column(name = "last_modified_by")
 	private String lastModifiedBy = "auto_generated";

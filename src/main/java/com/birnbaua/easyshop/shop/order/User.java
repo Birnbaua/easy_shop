@@ -38,6 +38,7 @@ public class User extends BaseEntity {
 	@Column(name = "email")
 	private String email;
 	
+	@JsonIgnore
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "username"))
 	@Column(name = "role")
