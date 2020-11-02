@@ -26,9 +26,9 @@ import com.birnbaua.easyshop.shop.order.id.ItemId;
 
 @RestController
 @RequestMapping("/api/{shop}/item")
-public class ItemController {
+public class ItemControllerRest {
 	
-	private static final Log LOG = LogFactory.getLog(ItemController.class);
+	private static final Log LOG = LogFactory.getLog(ItemControllerRest.class);
 	
 	@Autowired
 	private ItemService is;

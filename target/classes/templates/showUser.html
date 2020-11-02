@@ -18,19 +18,19 @@
 	    	<form id="editForm" th:action="@{/api/service}" th:object="${ServiceOverview}" th:method="PUT">
 	    	  <div class="form-group">
 			    <label for="userName"><Strong>Username</Strong></label>
-			    <p id="username"></p>
+			    <p id="username">[[${username}]]</p>
 			  </div>
 			  <div class="form-group">
 			    <label for="firstName1"><strong>First Name</strong></label>
-			    <input type="text" class="form-control" id="firstName" name="firstName">
+			    <input type="text" class="form-control" id="firstName" name="firstName" th:value="${firstName}">
 			  </div>
 			  <div class="form-group">
 			    <label for="lastName1"><strong>Last Name</strong></label>
-			    <input type="text" class="form-control" id="lastName" name="lastName">
+			    <input type="text" class="form-control" id="lastName" name="lastName" th:value="${lastName}">
 			  </div>
 			  <div class="form-group">
 			    <label for="exampleInputEmail1"><strong>Email address</strong></label>
-			    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" required>
+			    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" required th:value="${email}">
 			    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
 			  </div>
 			  <button type="submit" class="btn btn-primary">Submit</button>
@@ -117,7 +117,6 @@
 	    };
 	
 	// initial call
-	callout();
 	</script>
 	
 	<script>
@@ -126,13 +125,9 @@
 	    form.submit(function(e) {
 	        // prevent form submission
 	        e.preventDefault();
-	        var pageURL = window.location.href;
-	    	var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
-	    	console.log(lastURLSegment);
 	        // submit the form via Ajax
-	        console.log(JSON.stringify(form.serializeArray()));
 	        $.ajax({
-	            "url": "/api/user/" + lastURLSegment,
+	            "url": "/api/user/" + document.getElementById("username").innerHTML,
 	            "type": "PUT",
 	            "dataType": "json",
 	            "contentType": "application/json",
@@ -143,10 +138,11 @@
 	            	console.log("success");
 	            },
 	        	error: function(result) {
-	        		console.log(form.attr('action') + '/' + lastURLSegment)
+	        		console.log(form.attr('action') + '/' + document.getElementById("username").innerHTML)
 	            	alert("Failed to edit user\n"+result.getResponseHeader("User"));
 	        	}
 	        });
+	        location.reload();
 	    });
 	});
 	</script>
@@ -156,11 +152,9 @@
 	    var form = $('#serviceForm');
 	    form.submit(function(e) {
 	        // prevent form submission
-	        var pageURL = window.location.href;
-	    	var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
 	        e.preventDefault();
 	        var xhr = $.ajax({
-	            "url": "/api/user/" + lastURLSegment + "/password",
+	            "url": "/api/user/" + document.getElementById("username").innerHTML + "/password",
 	            "type": "PUT",
 	            "dataType": "json",
 	            "contentType": "application/json",

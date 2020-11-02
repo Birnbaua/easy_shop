@@ -12,7 +12,7 @@
 	<body>
 		<div th:fragment="myNavbar">
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			  <a class="navbar-brand" href="/about" id="shop">[[${shop}]]</a>
+			  <a class="navbar-brand" th:href="${shop != null} ? '/about' : '/admin'" id="shop">[[${shop != null} ? ${shop} : 'Admin']]</a>
 			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			    <span class="navbar-toggler-icon"></span>
 			  </button>
@@ -29,8 +29,8 @@
 			          [[${#httpServletRequest.remoteUser}]]
 			        </a>
 			        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-			          <a class="dropdown-item" th:href="@{'/user/'+${#httpServletRequest.remoteUser}}">Show</a>
-			          <a class="dropdown-item" th:href="@{'/user/'+${#httpServletRequest.remoteUser}}">Edit</a>
+			          <a class="dropdown-item" href="/user">Show</a>
+			          <a class="dropdown-item" href="/user">Edit</a>
 			          <a class="dropdown-item" href="/help">Help me</a>
 			          <div class="dropdown-divider"></div>
 			          <a class="dropdown-item" href="/customLogout">Logout</a>

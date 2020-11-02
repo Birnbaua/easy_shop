@@ -19,34 +19,39 @@ public class AdminController {
 	private ShopService ss;
 	
 	@GetMapping()
-	public String getAdminPage() {
-		return "shop_table";
+	public String getAdminPage(HttpServletRequest request) {
+		if(request.isRequestedSessionIdValid()) {
+			return "shop_table";	
+		} else {
+			return "redirect:/login";
+		}
 	}
 	
-	@GetMapping("{name}/items")
+	@GetMapping("/{name}/items")
 	public String items(@PathVariable String name, Model model, HttpServletRequest request) {
 		model.addAttribute("shop", name);
 		try {
 			if(isAuthorized(name,request)) {
 				return "item_table";	
+			} else {
+				return "redirect:/login";
 			}
 		} catch(NullPointerException e) {
-			return "redirect:/login";
+			return "error";
 		}
-		return "error";
 	}
 	
-	@GetMapping("{name}/orders")
+	@GetMapping("/{name}/orders")
 	public String orders(@PathVariable String name, Model model, HttpServletRequest request) {
 		model.addAttribute("shop", name);
 		try {
 			if(isAuthorized(name,request)) {
 				return "order_table";	
 			}
-		} catch(NullPointerException e) {
 			return "redirect:/login";
+		} catch(NullPointerException e) {
+			return "error";
 		}
-		return "error";
 	}
 	
 	private boolean isAuthorized(String shop, HttpServletRequest request) throws NullPointerException {

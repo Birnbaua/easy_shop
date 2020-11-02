@@ -33,4 +33,12 @@ public class ShopService {
 		return shop;
 	}
 	
+	public List<Shop> getAllOfUser(String username) {
+		return sr.getAllOfUser(username);
+	}
+	
+	public Shop getShopOfUsername(String username) {
+		return sr.shopOfUser(username).orElse(null);
+	}
+	
 }

@@ -31,9 +31,9 @@ import com.birnbaua.easyshop.shop.order.id.OrderId;
 
 @RestController
 @RequestMapping("/api/{shop}/order")
-public class OrderController {
+public class OrderControllerRest {
 	
-	private static final Log LOG = LogFactory.getLog(OrderController.class);
+	private static final Log LOG = LogFactory.getLog(OrderControllerRest.class);
 	
 	@Autowired
 	private OrderService os;

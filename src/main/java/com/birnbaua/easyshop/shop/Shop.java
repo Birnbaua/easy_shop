@@ -3,6 +3,7 @@ package com.birnbaua.easyshop.shop;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -26,11 +27,11 @@ public class Shop {
 	@JoinColumn(name = "shop_owner", nullable = true)
 	private User owner;
 	
-	@OneToMany()
+	@OneToMany(cascade = {CascadeType.REMOVE})
 	@JoinColumn(name = "shop_id")
 	private List<Item> items = new LinkedList<>();
 	
-	@OneToMany()
+	@OneToMany(cascade = {CascadeType.REMOVE})
 	@JoinColumn(name = "shop_id")
 	private List<Order> orders = new LinkedList<>();
 	
