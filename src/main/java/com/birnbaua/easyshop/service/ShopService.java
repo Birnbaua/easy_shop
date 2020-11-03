@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.birnbaua.easyshop.repository.ItemRepository;
+import com.birnbaua.easyshop.repository.OrderRepository;
 import com.birnbaua.easyshop.repository.ShopRepository;
 import com.birnbaua.easyshop.shop.Shop;
 
@@ -13,6 +15,12 @@ public class ShopService {
 	
 	@Autowired
 	private ShopRepository sr;
+	
+	@Autowired
+	private ItemRepository is;
+	
+	@Autowired
+	private OrderRepository os;
 	
 	public Shop save(Shop shop) {
 		return sr.save(shop);
@@ -29,6 +37,8 @@ public class ShopService {
 	public Shop deleteById(String id) {
 		Shop shop = null;
 		shop = getShopById(id);
+		os.deleteInBatch(shop.getOrders());
+		is.deleteInBatch(shop.getItems());
 		sr.deleteById(id);
 		return shop;
 	}
