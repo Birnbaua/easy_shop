@@ -2,7 +2,6 @@ package com.birnbaua.easyshop.shop.order;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -20,8 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Item {
 	
 	@Id
-    @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "shop_id")
+	@JsonIgnore
+    @ManyToOne(targetEntity = Shop.class)
+	@JoinColumn(name = "shop_id", referencedColumnName = "name")
     private Shop shop;
 	
 	@Id
@@ -37,15 +37,15 @@ public class Item {
 	@Column(name = "`max`")
 	private Integer maxAmount;
 	
-	@Column(name ="is_available")
+	@Column(name = "is_available")
 	private Boolean isAvaliable;
-
-	public Boolean getIsAvaliable() {
-		return isAvaliable;
+	
+	public Shop getShop() {
+		return shop;
 	}
 
-	public void setIsAvaliable(Boolean isAvaliable) {
-		this.isAvaliable = isAvaliable;
+	public void setShop(Shop shop) {
+		this.shop = shop;
 	}
 
 	public String getName() {
@@ -64,14 +64,6 @@ public class Item {
 		this.desc = desc;
 	}
 
-	public Integer getMaxAmount() {
-		return maxAmount;
-	}
-
-	public void setMaxAmount(Integer maxAmount) {
-		this.maxAmount = maxAmount;
-	}
-
 	public Double getPrice() {
 		return price;
 	}
@@ -80,14 +72,22 @@ public class Item {
 		this.price = price;
 	}
 	
-	public Shop getShop() {
-		return shop;
-	}
-
-	public void setShop(Shop shop) {
-		this.shop = shop;
+	public Integer getMaxAmount() {
+		return maxAmount;
 	}
 	
+	public void setMaxAmount(Integer maxAmount) {
+		this.maxAmount = maxAmount;
+	}
+
+	public Boolean getIsAvaliable() {
+		return isAvaliable;
+	}
+
+	public void setIsAvaliable(Boolean isAvaliable) {
+		this.isAvaliable = isAvaliable;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		return new ItemId(this.shop.getName(),this.name).equals(obj);

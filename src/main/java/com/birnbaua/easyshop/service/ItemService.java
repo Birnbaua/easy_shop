@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.birnbaua.easyshop.repository.ItemRepository;
 import com.birnbaua.easyshop.shop.order.Item;
+import com.birnbaua.easyshop.shop.order.User;
 import com.birnbaua.easyshop.shop.order.id.ItemId;
 
 @Service

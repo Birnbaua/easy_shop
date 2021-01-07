@@ -191,11 +191,10 @@
 	        e.preventDefault();
 	        var data = JSON.stringify($("#itemForm").formToJson());
 	        var shopvalue = document.getElementById("shop").innerHTML;
-	        var shopdata = "\"shop\":{\"name\":\"" + shopvalue + "\"},";
-	        data = [data.slice(0, 1), shopdata, data.slice(1)].join('');
+	        data = [data.slice(0, 1), data.slice(1)].join('');
 	        console.log(data);
 	        var xhr = $.ajax({
-	            "url": "/api/"+ document.getElementById("shop").innerHTML +"/item",
+	            "url": "/api/"+ shopvalue +"/item",
 	            "type": "POST",
 	            "dataType": "json",
 	            "contentType": "application/json",

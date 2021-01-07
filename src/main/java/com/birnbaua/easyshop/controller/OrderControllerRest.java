@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.birnbaua.easyshop.log.LoggingHelper;
 import com.birnbaua.easyshop.service.OrderService;
+import com.birnbaua.easyshop.service.ShopService;
 import com.birnbaua.easyshop.shop.Shop;
 import com.birnbaua.easyshop.shop.order.Order;
 import com.birnbaua.easyshop.shop.order.id.OrderId;
@@ -37,6 +38,9 @@ public class OrderControllerRest {
 	
 	@Autowired
 	private OrderService os;
+	
+	@Autowired
+	private ShopService ss;
 
 	private Map<String,AtomicLong> nrMap = Collections.synchronizedMap(new HashMap<String,AtomicLong>());
 	
@@ -49,7 +53,7 @@ public class OrderControllerRest {
 		try {
 			order.setOrderPos(order.getOrderPos().stream().filter(x -> x.getAmount() > 0).collect(Collectors.toList()));
 			order.setNr(nrMap.get(shop).incrementAndGet());
-			LOG.info("Try saving oder of shop: " + order.getShop().getName() + " and nr: " + order.getNr());
+			LOG.info("Try saving oder of shop: " + order.getShop() + " and nr: " + order.getNr());
 			os.save(order);
 			msg = "Successfully created an order with id: " + order.getNr();
 			LOG.info(msg);
@@ -119,7 +123,7 @@ public class OrderControllerRest {
 	private boolean isAuthorizedToManipulate(OrderId orderId, HttpServletRequest request) {
 		if(request.isUserInRole("ROLE_ADMIN")) {
 			return true;
-		} else if(os.getOrderById(orderId).getShop().getOwner().getUsername().equals(request.getUserPrincipal().getName())) {
+		} else if(ss.getShopById(orderId.getShop()).getOwner().getUsername().equals(request.getUserPrincipal().getName())) {
 			return true;
 		}
 		return false;

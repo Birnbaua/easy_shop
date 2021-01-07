@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.birnbaua.easyshop.log.LoggingHelper;
 import com.birnbaua.easyshop.service.ItemService;
+import com.birnbaua.easyshop.service.ShopService;
 import com.birnbaua.easyshop.shop.Shop;
 import com.birnbaua.easyshop.shop.order.Item;
 import com.birnbaua.easyshop.shop.order.id.ItemId;
@@ -33,11 +34,18 @@ public class ItemControllerRest {
 	@Autowired
 	private ItemService is;
 	
+	@Autowired
+	private ShopService ss;
+	
 	@PostMapping()
 	public ResponseEntity<Item> postItem(@PathVariable String shop, @RequestBody Item item) {
 		String msg = null;
 		try {
 			item.setShop(new Shop(shop));
+			System.out.println(item.getShop());
+			System.out.println(item.getName());
+			System.out.println(item.getPrice());
+			System.out.println(item.getDesc());
 			is.save(item);
 			msg = "Created new item: " + item.getName() + " with price: " + item.getPrice() + " and a maximal amount: " + item.getMaxAmount();
 			LOG.info(msg);
@@ -109,7 +117,7 @@ public class ItemControllerRest {
 	private boolean isAuthorizedToManipulate(ItemId itemId, HttpServletRequest request) {
 		if(request.isUserInRole("ROLE_ADMIN")) {
 			return true;
-		} else if(is.getItemById(itemId).getShop().getOwner().getUsername().equals(request.getUserPrincipal().getName())) {
+		} else if(ss.getShopById(itemId.getShop()).getOwner().getUsername().equals(request.getUserPrincipal().getName())) {
 			return true;
 		}
 		return false;

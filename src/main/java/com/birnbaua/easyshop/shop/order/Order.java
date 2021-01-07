@@ -6,19 +6,19 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.birnbaua.easyshop.shop.Shop;
 import com.birnbaua.easyshop.shop.order.id.OrderId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "sales_order")
@@ -26,14 +26,15 @@ import com.birnbaua.easyshop.shop.order.id.OrderId;
 public class Order {
 	
 	@Id
-	@Column(name = "nr")
-	private Long nr;
-	
-	@Id
-    @ManyToOne
-	@JoinColumn(name = "shop_id")
+	@JsonIgnore
+    @ManyToOne(targetEntity = Shop.class)
+	@JoinColumn(name = "shop_id", referencedColumnName = "name")
     private Shop shop;
 	
+	@Id
+	@Column(name = "order_nr")
+	private Long nr;
+		
 	@Column(name = "servingTable", nullable = false)
 	private String table;
 	
@@ -42,12 +43,13 @@ public class Order {
 	
 	@Column(name = "total_price")
 	private Double price;
-
+	
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.MERGE})
-	@JoinTable(name = "order_to_order_pos", joinColumns = {@JoinColumn(name = "shop_id"),@JoinColumn(name = "order_nr")})
+	@JoinColumns({
+		@JoinColumn(name = "shop_id", referencedColumnName = "shop_id"),
+		@JoinColumn(name = "order_nr", referencedColumnName = "order_nr")})
 	private List<OrderPos> orderPos = new LinkedList<>();
 	
-	@Transient
 	@PostLoad
 	private void calcPrice() {
 		this.price = orderPos.stream().mapToDouble(x -> x.getAmount() * x.getItem().getPrice()).sum();

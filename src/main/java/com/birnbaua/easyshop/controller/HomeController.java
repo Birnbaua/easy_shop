@@ -44,7 +44,7 @@ public class HomeController {
 			LOG.error("Something went wrong creating the user with username: " + user.getUsername() + " and email: " + user.getEmail());
 			LoggingHelper.logStackTrace(LOG, e);
 		}
-		return "redirect:/admin/orders";
+		return "redirect:/admin";
 	}
 	
 	@GetMapping("/")

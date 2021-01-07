@@ -3,6 +3,7 @@ package com.birnbaua.easyshop.shop;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -20,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Shop {
 	
 	@Id
+	@Column(name = "name")
 	private String name;
 	
 	@ManyToOne
@@ -34,12 +36,19 @@ public class Shop {
 	@JoinColumn(name = "shop_id")
 	private List<Order> orders = new LinkedList<>();
 	
+	@OneToMany()
+	@JoinColumn(name = "shop_id")
+	private List<ShopTable> tables = new LinkedList<>();
+	
+	@Column(name = "has_limited_tables")
+	private Boolean hasLimitedTables = false;
+	
 	public Shop() {
 		
 	}
 	
-	public Shop(String name) {
-		this.name = name;
+	public Shop(String shop) {
+		this.name = shop;
 	}
 
 	public String getName() {
@@ -57,7 +66,23 @@ public class Shop {
 	public void setOwner(User owner) {
 		this.owner = owner;
 	}
-	
+
+	public List<ShopTable> getTables() {
+		return tables;
+	}
+
+	public void setTables(List<ShopTable> tables) {
+		this.tables = tables;
+	}
+
+	public Boolean getHasLimitedTables() {
+		return hasLimitedTables;
+	}
+
+	public void setHasLimitedTables(Boolean hasLimitedTables) {
+		this.hasLimitedTables = hasLimitedTables;
+	}
+
 	@JsonIgnore
 	public List<Item> getItems() {
 		return items;
