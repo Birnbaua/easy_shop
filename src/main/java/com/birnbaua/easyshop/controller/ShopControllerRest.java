@@ -121,8 +121,8 @@ public class ShopControllerRest {
 		String msg = null;
 		Shop shop = null;
 		try {
-			shop = ss.deleteById(id);
-			msg = "Shop: " + shop.getName() + " with owner " + shop.getOwner() + " deleted.";
+			ss.deleteById(id);
+			msg = "Shop " + id + " deleted.";
 			LOG.info(msg);
 		} catch(Exception e) {
 			msg = "Something went wrong while deleting the shop: " + id +". Error message: " + e.getMessage();

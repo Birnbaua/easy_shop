@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Luke, I am your father">
+    <title>Tables</title>
+	<link th:rel="stylesheet" th:href="@{/css/datatables.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<!-- space for description etc. -->
+<div th:fragment="overview">
+	<div class="container">
+	    <div class="row">
+	        <div class="col-lg-10 mt-5 mb-5">
+	            <table id="shopTable" class="table table-striped" style="width: 100%">
+	                <colgroup>
+				       <col span="1" style="width: 20%;">
+				       <col span="1" style="width: 35%;">
+				       <col span="1" style="width: 45%;">
+				    </colgroup>
+	                <thead>
+		                <tr>
+		                    <th>Nr.</th>
+		                    <th>Name</th>
+		                    <th>Description</th>
+		                </tr>
+		                <tr th:each="table,iStat : ${tables}"  th:style="${iStat.even} ? 'background: white' : 'background: #D8D8D8'">
+		                	<td>
+		                		<a th:href="'/shop/' + ${shop} + '?table=' + ${table.nr}">
+		                			[[${table.nr}]]
+		                		</a></td>
+		                	<td > 
+		                		<a th:href="'/shop/' + ${shop} + '?table=' + ${table.nr}">
+		                			[[${table.name}]]
+		                		</a>
+		                	</td>
+		                	<td>[[${table.desc}]]</td>
+		                </tr>
+	                </thead>
+	            </table>
+	        </div>
+	    </div>
+	</div>
+</div>
+
+</body>
+</html>

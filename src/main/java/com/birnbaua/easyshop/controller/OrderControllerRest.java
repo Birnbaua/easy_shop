@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.birnbaua.easyshop.log.LoggingHelper;
@@ -52,6 +54,8 @@ public class OrderControllerRest {
 		String msg = null;
 		try {
 			order.setOrderPos(order.getOrderPos().stream().filter(x -> x.getAmount() > 0).collect(Collectors.toList()));
+			AtomicInteger posNr = new AtomicInteger(0);
+			order.getOrderPos().stream().forEach(x -> x.setNr(posNr.getAndIncrement()));
 			order.setNr(nrMap.get(shop).incrementAndGet());
 			LOG.info("Try saving oder of shop: " + order.getShop() + " and nr: " + order.getNr());
 			os.save(order);
@@ -67,10 +71,14 @@ public class OrderControllerRest {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<Order>> getOpenOrders(@PathVariable String shop) {
+	public ResponseEntity<List<Order>> getOpenOrders(@PathVariable String shop, @RequestParam(value = "from", required = false) Long from) {
 		List<Order> orders = null;
 		try {
-			orders = os.getOpenOrders(shop);
+			if(from != null) {
+				orders = os.findOpenOrders(shop, from);
+			} else {
+				orders = os.getOpenOrders(shop);
+			}
 		} catch(Exception e) {
 			LoggingHelper.logStackTrace(LOG, e);
 			return ResponseEntity.badRequest().header("Order", "Something went wrong fetching open orders of shop: " + shop + " from server").body(orders);
@@ -108,7 +116,7 @@ public class OrderControllerRest {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("Order", "User is not authorized to edit this item.").body(order);
 		}
 		try {
-			order = os.deleteById(new OrderId(shop,nr));
+			os.deleteById(new OrderId(shop,nr));
 			msg = "Successfully deleted order with id: " + nr;
 			LOG.info(msg);
 		} catch(Exception e) {

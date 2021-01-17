@@ -11,18 +11,25 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.birnbaua.easyshop.auth.User;
+import com.birnbaua.easyshop.shop.order.BaseEntity;
 import com.birnbaua.easyshop.shop.order.Item;
 import com.birnbaua.easyshop.shop.order.Order;
-import com.birnbaua.easyshop.shop.order.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Table
 @Entity
-public class Shop {
+public class Shop extends BaseEntity {
 	
 	@Id
 	@Column(name = "name")
 	private String name;
+	
+	@Column(name = "`desc`", length = 1024)
+	private String desc;
+	
+	@Column(name = "title", length = 64)
+	private String title;
 	
 	@ManyToOne
 	@JoinColumn(name = "shop_owner", nullable = true)
@@ -39,9 +46,6 @@ public class Shop {
 	@OneToMany()
 	@JoinColumn(name = "shop_id")
 	private List<ShopTable> tables = new LinkedList<>();
-	
-	@Column(name = "has_limited_tables")
-	private Boolean hasLimitedTables = false;
 	
 	public Shop() {
 		
@@ -67,20 +71,21 @@ public class Shop {
 		this.owner = owner;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@JsonIgnore
 	public List<ShopTable> getTables() {
 		return tables;
 	}
 
 	public void setTables(List<ShopTable> tables) {
 		this.tables = tables;
-	}
-
-	public Boolean getHasLimitedTables() {
-		return hasLimitedTables;
-	}
-
-	public void setHasLimitedTables(Boolean hasLimitedTables) {
-		this.hasLimitedTables = hasLimitedTables;
 	}
 
 	@JsonIgnore
@@ -101,6 +106,14 @@ public class Shop {
 		this.orders = orders;
 	}
 	
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof Shop) {

@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script th:src="@{/js/formToJson.min.js}"></script>
 </head>
 <body>	
 	<div class="container div-center" style="padding-top: 20px">
-		<h2 style="text-align:center"><strong>Sauf oder Stirb!</strong></h2>
+		<h2 style="text-align:center"><strong>[[${shop_title}]]</strong></h2>
 	</div>	
 	<div class="container div-center" style="padding-top: 10px">
 		<h4 style="text-align:left"><span>Shop: </span><strong id="shop">[[${shop}]]</strong></h4>
@@ -33,8 +34,7 @@
 	    </div>
 	</div>
 	
-	<script th:src="@{/js/jquery.min.js}"></script>
-	<script th:src="@{/js/formToJson.min.js}"></script>
+	<!-- <script th:src="@{/js/jquery.min.js}"></script> -->
 	
 	<!-- Post order to service -->
 	<script>

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.birnbaua.easyshop.auth.CustomUserDetailsService;
-import com.birnbaua.easyshop.shop.order.User;
+import com.birnbaua.easyshop.auth.User;
 
 @Controller
 @RequestMapping("/user")

@@ -1,23 +1,36 @@
 package com.birnbaua.easyshop.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import com.birnbaua.easyshop.repository.OrderRepository;
-import com.birnbaua.easyshop.shop.Shop;
 import com.birnbaua.easyshop.shop.order.Order;
+import com.birnbaua.easyshop.shop.order.id.ItemId;
 import com.birnbaua.easyshop.shop.order.id.OrderId;
 
 @Service
-public class OrderService {
+public class OrderService extends JpaService<Order,OrderId>{
 	
 	@Autowired
 	private OrderRepository or;
 	
+	@Autowired
+	private ItemService is;
+	
+	@Override
 	public Order save(Order order) {
+		order.getOrderPos().forEach(x -> {
+			x.setItem(is.findById(new ItemId(order.getShop().getName(), x.getItem().getName())));
+		});
 		return or.save(order);
+	}
+	
+	public List<Order> findOpenOrders(String shop, Long time) {
+		return or.findOpenOrders(shop, new Timestamp(time));
 	}
 	
 	public List<Order> getOpenOrders() {
@@ -25,13 +38,7 @@ public class OrderService {
 	}
 	
 	public List<Order> getOpenOrders(String shop) {
-		return or.getOpenOrdersOfShop(shop);
-	}
-	
-	public Order deleteById(OrderId id) {
-		Order order = or.getOne(id);
-		or.deleteById(id);
-		return order;
+		return or.findOpenOrders(shop);
 	}
 	
 	public Order setIsDone(OrderId id) {
@@ -51,6 +58,11 @@ public class OrderService {
 
 	public Order getOrderById(OrderId orderId) {
 		return or.getOne(orderId);
+	}
+
+	@Override
+	public JpaRepository<Order, OrderId> getRepository() {
+		return or;
 	}
 
 }

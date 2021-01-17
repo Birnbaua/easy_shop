@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.birnbaua.easyshop.repository.UserRepository;
-import com.birnbaua.easyshop.shop.order.User;
 
 
 @Service

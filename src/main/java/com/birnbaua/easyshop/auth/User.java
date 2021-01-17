@@ -1,4 +1,4 @@
-package com.birnbaua.easyshop.shop.order;
+package com.birnbaua.easyshop.auth;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Table;
 
-import com.birnbaua.easyshop.auth.UserRole;
+import com.birnbaua.easyshop.shop.order.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

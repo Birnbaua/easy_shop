@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Min;
 
 import com.birnbaua.easyshop.shop.Shop;
 import com.birnbaua.easyshop.shop.order.id.ItemId;
@@ -16,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "item", uniqueConstraints = {@UniqueConstraint(columnNames = {"shop_id","name"})})
 @IdClass(ItemId.class)
-public class Item {
+public class Item extends BaseEntity {
 	
 	@Id
 	@JsonIgnore
@@ -31,14 +32,24 @@ public class Item {
 	@Column(name = "`desc`", nullable = true)
 	private String desc;
 	
+	@Min(0)
 	@Column(name = "price")
 	private Double price = 0.0;
 	
+	@Min(1)
 	@Column(name = "`max`")
 	private Integer maxAmount;
 	
 	@Column(name = "is_available")
 	private Boolean isAvaliable;
+	
+	public Item() {
+		
+	}
+	
+	public Item(String name) {
+		this.name = name;
+	}
 	
 	public Shop getShop() {
 		return shop;

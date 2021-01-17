@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.birnbaua.easyshop.auth.CustomUserDetailsService;
+import com.birnbaua.easyshop.auth.User;
 import com.birnbaua.easyshop.auth.UserRole;
 import com.birnbaua.easyshop.log.LoggingHelper;
 import com.birnbaua.easyshop.service.ItemService;
-import com.birnbaua.easyshop.shop.order.User;
+import com.birnbaua.easyshop.service.ShopService;
+import com.birnbaua.easyshop.service.ShopTableService;
 
 @Controller
 public class HomeController {
@@ -30,6 +32,12 @@ public class HomeController {
 	
 	@Autowired
 	private ItemService is;
+	
+	@Autowired
+	private ShopService ss;
+	
+	@Autowired
+	private ShopTableService sts;
 	
 	@PostMapping("/signup")
 	public String registered(HttpServletRequest request, @ModelAttribute(name="user") User user) {
@@ -48,9 +56,14 @@ public class HomeController {
 	}
 	
 	@GetMapping("/")
-	public String root(@RequestParam(required = true) String table) {
-		return "redirect:/home" + "?table=" + table;
+	public String root(Model model) {
+		return "redirect:/shop";
 	}
+	
+//	@GetMapping("/")
+//	public String root(@RequestParam(required = true) String table) {
+//		return "redirect:/home" + "?table=" + table;
+//	}
 	
 	@GetMapping("/customLogout")
 	public String logout(HttpServletRequest request) {
@@ -59,7 +72,7 @@ public class HomeController {
 		} catch (ServletException e) {
 			e.printStackTrace();
 		}
-		return "redirect:/home";
+		return "redirect:/";
 	}
 	
 	@GetMapping("/login")
@@ -77,12 +90,30 @@ public class HomeController {
 		return "register";
 	}
 	
+	@GetMapping("/shop")
+	public String shop(Model model) {
+		model.addAttribute("shops", ss.findAll());
+		return "shop_overview";
+	}
+	
 	@GetMapping("/shop/{shop}")
-	public String getOverview(@PathVariable String shop, @RequestParam(required = true) String table, Model model) {
-		model.addAttribute("table_nr", table);
-		model.addAttribute("shop", shop);
-		model.addAttribute("items",is.getAll(shop));
-		return "user_order";
+	public String getOverview(@PathVariable String shop, @RequestParam(value = "table", required = false) String table, Model model) {
+		if(table == null) {
+			model.addAttribute("shop",shop);
+			try {
+				model.addAttribute("tables", sts.findTables(shop));
+			} catch(Exception e) {}
+			return "shop_details";
+		} else {
+			model.addAttribute("table_nr", table);
+			model.addAttribute("shop", shop);
+			try {
+				model.addAttribute("shop_title", ss.findById(shop).getTitle());
+				model.addAttribute("items",is.getAll(shop));
+			} catch(Exception e) {}
+			return "user_order";
+		}
+		
 	}
 	
 }

@@ -10,13 +10,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.birnbaua.easyshop.shop.order.BaseEntity;
 import com.birnbaua.easyshop.shop.order.id.ShopTableId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "`table`", uniqueConstraints = {@UniqueConstraint(columnNames = {"shop_id", "table_name"})})
 @IdClass(ShopTableId.class)
-public class ShopTable {
+public class ShopTable extends BaseEntity {
 	
 	@Id
 	@JsonIgnore
@@ -31,8 +32,19 @@ public class ShopTable {
 	@Column(name = "table_name")
 	private String name;
 	
+	@Column(name = "`desc`")
+	private String desc;
+	
 	@Column(name = "isAvaliable")
 	private Boolean isAvaliable = true;
+	
+	public ShopTable() {
+		
+	}
+	
+	public ShopTable(Integer nr) {
+		this.nr = nr;
+	}
 
 	public Shop getShop() {
 		return shop;
@@ -48,6 +60,14 @@ public class ShopTable {
 
 	public void setNr(Integer nr) {
 		this.nr = nr;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 	public String getName() {

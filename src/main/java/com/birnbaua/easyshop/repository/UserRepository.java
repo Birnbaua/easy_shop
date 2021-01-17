@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.birnbaua.easyshop.auth.User;
 import com.birnbaua.easyshop.auth.UserRole;
-import com.birnbaua.easyshop.shop.order.User;
 
 
 public interface UserRepository extends JpaRepository<User,Integer> {

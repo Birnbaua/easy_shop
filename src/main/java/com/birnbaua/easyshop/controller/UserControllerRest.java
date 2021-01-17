@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.birnbaua.easyshop.auth.CustomUserDetailsService;
 import com.birnbaua.easyshop.auth.PasswordChange;
+import com.birnbaua.easyshop.auth.User;
 import com.birnbaua.easyshop.log.LoggingHelper;
-import com.birnbaua.easyshop.shop.order.User;
 
 @RestController
 @RequestMapping("/api/user")
