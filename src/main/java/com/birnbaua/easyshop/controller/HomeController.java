@@ -1,5 +1,8 @@
 package com.birnbaua.easyshop.controller;
 
+import java.security.Principal;
+import java.util.LinkedList;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +24,7 @@ import com.birnbaua.easyshop.log.LoggingHelper;
 import com.birnbaua.easyshop.service.ItemService;
 import com.birnbaua.easyshop.service.ShopService;
 import com.birnbaua.easyshop.service.ShopTableService;
+import com.birnbaua.easyshop.shop.order.id.ShopTableId;
 
 @Controller
 public class HomeController {
@@ -41,29 +45,25 @@ public class HomeController {
 	
 	@PostMapping("/signup")
 	public String registered(HttpServletRequest request, @ModelAttribute(name="user") User user) {
+		user.setRoles(new LinkedList<>());
 		user.getRoles().add(UserRole.GUEST);
 		String un = user.getUsername();
 		String pw = user.getPassword();
-		us.initSave(user);
 		try {
+			us.initSave(user);
 			request.login(un, pw);
 			LOG.info("Created new user with username: " + user.getUsername() + " and email: " + user.getEmail());
 		} catch (ServletException e) {
 			LOG.error("Something went wrong creating the user with username: " + user.getUsername() + " and email: " + user.getEmail());
 			LoggingHelper.logStackTrace(LOG, e);
 		}
-		return "redirect:/admin";
+		return "redirect:/";
 	}
 	
 	@GetMapping("/")
 	public String root(Model model) {
 		return "redirect:/shop";
 	}
-	
-//	@GetMapping("/")
-//	public String root(@RequestParam(required = true) String table) {
-//		return "redirect:/home" + "?table=" + table;
-//	}
 	
 	@GetMapping("/customLogout")
 	public String logout(HttpServletRequest request) {
@@ -75,6 +75,10 @@ public class HomeController {
 		return "redirect:/";
 	}
 	
+	/**
+	 * Login form
+	 * @return
+	 */
 	@GetMapping("/login")
 	public String getLoginForm() {
 		return "login";
@@ -85,6 +89,10 @@ public class HomeController {
 		return "about";
 	}
 	
+	/**
+	 * To register a new user
+	 * @return
+	 */
 	@GetMapping("/join")
 	public String getRegisterForm() {
 		return "register";
@@ -92,28 +100,46 @@ public class HomeController {
 	
 	@GetMapping("/shop")
 	public String shop(Model model) {
-		model.addAttribute("shops", ss.findAll());
+		try {
+			model.addAttribute("shops", ss.findAll());
+		} catch(Exception e) {}
 		return "shop_overview";
 	}
 	
 	@GetMapping("/shop/{shop}")
-	public String getOverview(@PathVariable String shop, @RequestParam(value = "table", required = false) String table, Model model) {
+	public String getOverview(@PathVariable String shop, @RequestParam(value = "table", required = false) Integer table, Model model, HttpServletRequest request) {
+		if(ss.existsById(shop) == false) {
+			return "error";
+		}
 		if(table == null) {
-			model.addAttribute("shop",shop);
 			try {
+				model.addAttribute("shop",shop);
+				if(isAuthorized(request,shop)) {
+					return "redirect:/admin/" + shop;
+				}
 				model.addAttribute("tables", sts.findTables(shop));
 			} catch(Exception e) {}
 			return "shop_details";
 		} else {
-			model.addAttribute("table_nr", table);
-			model.addAttribute("shop", shop);
 			try {
+				model.addAttribute("table_name", sts.findById(new ShopTableId(shop,table)).getName());
+				model.addAttribute("shop", shop);
+				model.addAttribute("table_nr", table);
 				model.addAttribute("shop_title", ss.findById(shop).getTitle());
-				model.addAttribute("items",is.getAll(shop));
+				model.addAttribute("items",is.findAvaliableItems(shop));
 			} catch(Exception e) {}
 			return "user_order";
 		}
 		
+	}
+	
+	private boolean isAuthorized(HttpServletRequest request, String shop) {
+		if(request.getUserPrincipal() != null) {
+			if(request.isUserInRole("ROLE_ADMIN") || ss.findById(shop).getOwner().getUsername().equals(request.getUserPrincipal().getName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

@@ -5,9 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-
-import com.birnbaua.easyshop.repository.ItemRepository;
-import com.birnbaua.easyshop.repository.OrderRepository;
 import com.birnbaua.easyshop.repository.ShopRepository;
 import com.birnbaua.easyshop.shop.Shop;
 
@@ -35,6 +32,14 @@ public class ShopService extends JpaService<Shop,String> {
 	
 	public Shop getShopOfUsername(String username) {
 		return sr.shopOfUser(username).orElse(null);
+	}
+	
+	public Integer getMaxOrdersPerTable(String shop, Integer table) {
+		return sr.getMaxOrdersPerTable(shop);
+	}
+	
+	public Boolean hasConfig(String shop) {
+		return sr.hasConfig(shop);
 	}
 
 	@Override

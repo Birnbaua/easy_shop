@@ -12,4 +12,7 @@ public interface ShopTableRepository extends JpaRepository<ShopTable,ShopTableId
 	
 	@Query("SELECT t FROM ShopTable t WHERE t.shop.name=?1")
 	public List<ShopTable> findTables(String shop);
+
+	@Query("SELECT t FROM ShopTable t WHERE t.shop.name=?1 AND t.isAvaliable=true")
+	public List<ShopTable> findAvaliableTables(String shop);
 }

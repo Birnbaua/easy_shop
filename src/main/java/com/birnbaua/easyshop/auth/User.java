@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "user")
-public class User extends BaseEntity {
+public class User extends BaseEntity<User,String> {
 	
 	@Id
 	@Column(name = "username")
@@ -46,7 +46,7 @@ public class User extends BaseEntity {
 	private List<UserRole> roles = new LinkedList<>();
 	
 	public User() {
-		
+
 	}
 	
 	public User(String owner) {

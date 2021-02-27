@@ -8,7 +8,7 @@ public class OrderId implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String shop;
+	private ShopTableId table;
 	
 	private Long nr;
 	
@@ -16,8 +16,8 @@ public class OrderId implements Serializable {
 		
 	}
 	
-	public OrderId(String shop, Long nr) {
-		this.shop = shop;
+	public OrderId(ShopTableId table, Long nr) {
+		this.table = table;
 		this.nr = nr;
 	}
 
@@ -29,23 +29,23 @@ public class OrderId implements Serializable {
 		this.nr = nr;
 	}
 
-	public String getShop() {
-		return shop;
-	}
-
-	public void setShop(String shop) {
-		this.shop = shop;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	
+	public ShopTableId getTable() {
+		return table;
+	}
+
+	public void setTable(ShopTableId table) {
+		this.table = table;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof OrderId) {
 			OrderId orderId = (OrderId) obj;
-			if(orderId.shop.equals(this.shop) && orderId.nr == this.nr) {
+			if(orderId.nr.equals(this.nr) && orderId.table.equals(this.table)) {
 				return true;
 			}
 		}
@@ -54,7 +54,9 @@ public class OrderId implements Serializable {
 	
 	@Override
 	public int hashCode() {
-		return this.shop.hashCode() * this.nr.intValue();
+		return this.nr.intValue() * this.table.hashCode();
 	}
+
+
 
 }

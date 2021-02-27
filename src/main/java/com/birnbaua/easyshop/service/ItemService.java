@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import com.birnbaua.easyshop.repository.ItemRepository;
-import com.birnbaua.easyshop.shop.order.Item;
+import com.birnbaua.easyshop.shop.item.Item;
 import com.birnbaua.easyshop.shop.order.id.ItemId;
 
 @Service
@@ -19,6 +19,14 @@ public class ItemService extends JpaService<Item,ItemId> {
 	
 	public List<Item> getAll() {
 		return ir.findAll();
+	}
+	
+	public List<Item> findItems(String shop) {
+		return ir.findAllOfShop(shop);
+	}
+	
+	public List<Item> findAvaliableItems(String shop) {
+		return ir.findAvaliableItems(shop);
 	}
 	
 	public List<Item> getAll(String shop) {

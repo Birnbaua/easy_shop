@@ -42,7 +42,7 @@
 		var tableId = document.getElementById("orderTable");
 	    callout = function () {
 	        $.ajax({
-	            "url": "/api/"+ document.getElementById("shop").innerHTML +"/order",
+	            "url": "/api/shop/"+ document.getElementById("shop").innerHTML +"/table/-1/order",
 	            "type": "GET",
 	            "dataType": "json",
 	            "contentType": "application/json",
@@ -65,7 +65,7 @@
 		                event_data += '<tr onclick="showAlert(' + value.nr + ')" style="cursor: pointer" bgcolor="lightsalmon">';
 	            	}
 	                event_data += '<td>'+value.nr+'</td>';
-	                event_data += '<td>'+value.table+'</td>';
+	                event_data += '<td>'+value.table.name+'</td>';
 	                
 	                event_data += '<td>';
 	                $.each(value.orderPos, function(i , val){

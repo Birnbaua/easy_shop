@@ -53,12 +53,13 @@ public class ShopControllerRest {
 	@GetMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Shop> getShop(@PathVariable String id, HttpServletRequest request) {
-		if(!isAuthorized(id,request)) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("Shop", "You are not authorized to view this shop").body(null);
-		}
+
 		Shop shop = null;
 		String msg = null;
 		try {
+			if(!isAuthorized(id,request)) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("Shop", "You are not authorized to view this shop").body(null);
+			}
 			shop= ss.getShopById(id);
 			msg = "Successfully fetched shop with name: " + id + " from database.";
 		} catch(Exception e) {
@@ -94,12 +95,13 @@ public class ShopControllerRest {
 	@PutMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Shop> editShop(@PathVariable String id, @RequestBody Shop shop, HttpServletRequest request) {
-		if(!isAuthorized(id,request)) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("Shop", "You are not authorized to edit this shop").body(null);
-		}
+		
 		String msg = null;
 		shop.setName(id);
 		try {
+			if(!isAuthorized(id,request)) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("Shop", "You are not authorized to edit this shop").body(null);
+			}
 			ss.save(shop);
 			msg = "Shop: " + shop.getName() + " with owner " + shop.getOwner() + " edited.";
 			LOG.info(msg);
@@ -115,12 +117,13 @@ public class ShopControllerRest {
 	@DeleteMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Shop> deleteShop(@PathVariable String id, HttpServletRequest request) {
-		if(!isAuthorized(id,request)) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("Shop", "You are not authorized to delete this shop").body(null);
-		}
+		
 		String msg = null;
 		Shop shop = null;
 		try {
+			if(!isAuthorized(id,request)) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("Shop", "You are not authorized to delete this shop").body(null);
+			}
 			ss.deleteById(id);
 			msg = "Shop " + id + " deleted.";
 			LOG.info(msg);

@@ -12,36 +12,29 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import com.birnbaua.easyshop.shop.Shop;
 import com.birnbaua.easyshop.shop.ShopTable;
 import com.birnbaua.easyshop.shop.order.id.OrderId;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "sales_order")
 @IdClass(OrderId.class)
-public class Order extends BaseEntity {
+public class Order extends BaseEntity<Order,OrderId> {
 	
 	@Id
-	@JsonIgnore
-    @ManyToOne(targetEntity = Shop.class)
-	@JoinColumn(name = "shop_id", referencedColumnName = "name")
-    private Shop shop;
+	@ManyToOne()
+	@JoinColumns(value = {
+		@JoinColumn(name = "shop_id", referencedColumnName = "shop_id"),
+		@JoinColumn(name = "table_nr", referencedColumnName = "table_nr")})
+	private ShopTable table;
 	
 	@Id
 	@Column(name = "order_nr")
 	private Long nr;
-	
-	
-	@ManyToOne()
-	@JoinColumns(value = {
-		@JoinColumn(name = "shop_id_table", referencedColumnName = "shop_id"),
-		@JoinColumn(name = "table_nr", referencedColumnName = "table_nr")})
-	private ShopTable table;
 	
 	@Column(name = "is_open")
 	private Boolean isOpen = true;
@@ -50,17 +43,15 @@ public class Order extends BaseEntity {
 	@Column(name = "total_price_at_purchasetime")
 	private Double price;
 	
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.MERGE})
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumns({
 		@JoinColumn(name = "shop_id", referencedColumnName = "shop_id"),
-		@JoinColumn(name = "order_nr", referencedColumnName = "order_nr")})
+		@JoinColumn(name = "order_nr", referencedColumnName = "order_nr"),
+		@JoinColumn(name = "table_nr", referencedColumnName = "table_nr")})
 	private List<OrderPos> orderPos = new LinkedList<>();
 	
-	@PreUpdate
-	@PrePersist
-	private void calcPrice() {
-		this.price = orderPos.stream().mapToDouble(x -> x.getAmount() * x.getItem().getPrice()).sum();
-		this.table.setShop(this.shop);
+	public Order() {
+
 	}
 
 	public ShopTable getTable() {
@@ -93,14 +84,6 @@ public class Order extends BaseEntity {
 
 	public void setPrice(Double price) {
 		this.price = price;
-	}
-	
-	public Shop getShop() {
-		return shop;
-	}
-
-	public void setShop(Shop shop) {
-		this.shop = shop;
 	}
 
 	public Long getNr() {

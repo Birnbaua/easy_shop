@@ -1,4 +1,4 @@
-package com.birnbaua.easyshop.shop.order;
+package com.birnbaua.easyshop.shop.item;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,13 +11,14 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Min;
 
 import com.birnbaua.easyshop.shop.Shop;
+import com.birnbaua.easyshop.shop.order.BaseEntity;
 import com.birnbaua.easyshop.shop.order.id.ItemId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "item", uniqueConstraints = {@UniqueConstraint(columnNames = {"shop_id","name"})})
 @IdClass(ItemId.class)
-public class Item extends BaseEntity {
+public class Item extends BaseEntity<Item,ItemId> {
 	
 	@Id
 	@JsonIgnore
@@ -44,7 +45,6 @@ public class Item extends BaseEntity {
 	private Boolean isAvaliable;
 	
 	public Item() {
-		
 	}
 	
 	public Item(String name) {

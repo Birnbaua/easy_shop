@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "`table`", uniqueConstraints = {@UniqueConstraint(columnNames = {"shop_id", "table_name"})})
 @IdClass(ShopTableId.class)
-public class ShopTable extends BaseEntity {
+public class ShopTable extends BaseEntity<ShopTable,ShopTableId> {
 	
 	@Id
 	@JsonIgnore
@@ -39,11 +39,15 @@ public class ShopTable extends BaseEntity {
 	private Boolean isAvaliable = true;
 	
 	public ShopTable() {
-		
 	}
 	
 	public ShopTable(Integer nr) {
 		this.nr = nr;
+	}
+
+	public ShopTable(Shop shop, Integer table) {
+		this.shop = shop;
+		this.nr = table;
 	}
 
 	public Shop getShop() {

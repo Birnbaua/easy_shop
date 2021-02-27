@@ -99,7 +99,7 @@
 		var tableId = document.getElementById("itemTable");
 	    callout = function () {
 	        $.ajax({
-	            "url": "/api/"+ document.getElementById('shop').innerHTML +"/item",
+	            "url": "/api/shop/"+ document.getElementById('shop').innerHTML +"/item",
 	            "type": "GET",
 	            "dataType": "json",
 	            "contentType": "application/json",
@@ -164,7 +164,7 @@
 		console.log(index)
 		if(confirm("Do you want to delete this item?")) {
 			var xhr = $.ajax({
-	            "url": "/api/"+ document.getElementById("shop").innerHTML +"/item/" + index,
+	            "url": "/api/shop/"+ document.getElementById("shop").innerHTML +"/item/" + index,
 	            "type": "DELETE",
 	            "dataType": "json",
 	            "contentType": "application/json",
@@ -194,7 +194,7 @@
 	        data = [data.slice(0, 1), data.slice(1)].join('');
 	        console.log(data);
 	        var xhr = $.ajax({
-	            "url": "/api/"+ shopvalue +"/item",
+	            "url": "/api/shop/"+ shopvalue +"/item",
 	            "type": "POST",
 	            "dataType": "json",
 	            "contentType": "application/json",

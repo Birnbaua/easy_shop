@@ -12,6 +12,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 
+import com.birnbaua.easyshop.shop.item.Item;
 import com.birnbaua.easyshop.shop.order.id.OrderPosId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -24,7 +25,10 @@ public class OrderPos {
 	@Id
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumns({@JoinColumn(name = "shop_id", referencedColumnName = "shop_id"),@JoinColumn(name = "order_nr", referencedColumnName = "order_nr")})
+	@JoinColumns({
+		@JoinColumn(name = "shop_id", referencedColumnName = "shop_id"),
+		@JoinColumn(name = "order_nr", referencedColumnName = "order_nr"),
+		@JoinColumn(name = "table_nr", referencedColumnName = "table_nr")})
 	private Order order;
 	
 	@Id

@@ -20,6 +20,10 @@ public class ShopTableService extends JpaService<ShopTable,ShopTableId>{
 		return sr.findTables(shop);
 	}
 	
+	public List<ShopTable> findAvaliableTables(String shop) {
+		return sr.findAvaliableTables(shop);
+	}
+	
 	@Override
 	public JpaRepository<ShopTable, ShopTableId> getRepository() {
 		return sr;

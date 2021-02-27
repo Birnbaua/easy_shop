@@ -12,7 +12,14 @@ public class ShopTableId implements Serializable {
 	private String shop;
 	private Integer nr;
 	
+	public ShopTableId() {
+		
+	}
 	
+	public ShopTableId(String shop, Integer table) {
+		this.shop = shop;
+		this.nr = table;
+	}
 	public String getShop() {
 		return shop;
 	}

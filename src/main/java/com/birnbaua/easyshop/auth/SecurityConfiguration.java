@@ -16,7 +16,6 @@ import com.birnbaua.easyshop.repository.UserRepository;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
-@EnableJpaRepositories(basePackageClasses = UserRepository.class)
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
@@ -44,6 +43,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
+//	    http.authorizeRequests()
+//	      .antMatchers("/oauth_login")
+//	      .permitAll()
+//	      .anyRequest()
+//	      .authenticated()
+//	      .and()
+//	      .oauth2Login()
+//	      .loginPage("/login");
 		http.authorizeRequests()
 			//.antMatchers("/admin").hasRole("ADMIN")
 			//.antMatchers("/api/item/**").hasRole("ADMIN")

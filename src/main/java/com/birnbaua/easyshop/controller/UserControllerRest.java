@@ -51,7 +51,8 @@ public class UserControllerRest {
 	public ResponseEntity<User> getUser(@PathVariable(value = "username") String username) {
 		return ResponseEntity.status(HttpStatus.OK).header("User", "User with username: " + username).body(us.getByUsername(username));
 	}
-	
+
+	@PreAuthorize("(#username == authentication.principal.username) OR hasRole('ROLE_ADMIN')")
 	@PutMapping("/{username}")
 	public ResponseEntity<User> editUser(@PathVariable(value = "username") String username, @RequestBody User user) {
 		User u = us.getByUsername(username);

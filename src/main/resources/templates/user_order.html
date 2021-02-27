@@ -9,6 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<script th:src="@{/js/formToJson.min.js}"></script>
+	<script th:src="@{/js/orderLogic.js}"></script>
 </head>
 <body>	
 	<div class="container div-center" style="padding-top: 20px">
@@ -18,7 +19,7 @@
 		<h4 style="text-align:left"><span>Shop: </span><strong id="shop">[[${shop}]]</strong></h4>
 	</div>
 	<div class="container div-center" style="padding-top: 0px">
-		<h4 id="table_id">Tisch: [[${table_nr}]]</h4>
+		<h4 id="table_id">[[${table_name}]]</h4>
 	</div>
 	<div th:fragment="overview" style="overflow-x: auto">
 		<div class="container div-center" style="padding-top: 20px; padding-bottom: 20px">
@@ -36,7 +37,15 @@
 	
 	<!-- <script th:src="@{/js/jquery.min.js}"></script> -->
 	
-	<!-- Post order to service -->
+	<script th:inline="javascript">
+	$(document).ready(function() {
+		var shop = [[${shop}]];
+		var table = [[${table_nr}]];
+		postOrder($('#orderForm'),shop,table);
+	});
+	</script>
+	
+	<!-- Post order to service 
 	<script>
 	$(document).ready(function(){
 	    var form = $('#orderForm');
@@ -85,6 +94,6 @@
 	    });
 	});
 	</script>
-
+	-->
 </body>
 </html>

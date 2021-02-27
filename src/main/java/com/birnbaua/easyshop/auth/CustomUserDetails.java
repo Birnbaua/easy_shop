@@ -57,4 +57,9 @@ public class CustomUserDetails extends User implements UserDetails {
 		return true;
 	}
 
+	public User getUser() {
+		// TODO Auto-generated method stub
+		return this.getUser();
+	}
+
 }
