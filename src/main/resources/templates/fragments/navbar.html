@@ -12,17 +12,20 @@
 	<body>
 		<div th:fragment="myNavbar">
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<!-- 
 			  <a class="navbar-brand" th:href="${shop != null} ? '/about' : '/admin'" id="shop">[[${shop != null} ? ${shop} : 'Admin']]</a>
+			-->
+			  <a class="navbar-brand" href="/admin">Admin</a>
 			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			    <span class="navbar-toggler-icon"></span>
 			  </button>
 			  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 			    <ul class="navbar-nav mr-auto">
-			      <li class="nav-item">
-			        <a class="nav-link" th:href="@{'/admin/'+${shop}+'/orders'}">Orders<span class="sr-only">(current)</span></a>
+			      <li class="nav-item" th:if="${shop} != null">
+			        <a class="nav-link" th:href="@{'/admin/'+ ${shop} +'/orders'}">Orders<span class="sr-only">(current)</span></a>
 			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link" th:href="@{'/admin/'+${shop}+'/items'}">Items</a>
+			      <li class="nav-item" th:if="${shop} != null">
+			        <a class="nav-link" th:href="@{'/admin/'+ ${shop} +'/items'}">Items</a>
 			      </li>
 			      <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
 			        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

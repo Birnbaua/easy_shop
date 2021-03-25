@@ -10,106 +10,50 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script th:src="@{/js/formToJson.min.js}"></script>
+	<script th:src="@{/js/orderLogic.js}"></script>
     <style type="text/css">
 	    .table-row{
 		cursor:pointer;
 	}</style>
 </head>
 <body>
-
-<header th:insert="fragments/navbar.html :: myNavbar"> </header>
-
-<div th:fragment="overview">
-	<div class="container div-center">
-	            <table id="orderTable" class="table table-striped" style="width: 100%">
-	                <thead>
-	                <tr>
-	                    <th>Nr</th>
-	                    <th>Table</th>
-	                    <th>Order</th>
-	                    <th>Price €</th>
-	                </tr>
-	                </thead>
-	            </table>
+ 
+	<header th:insert="fragments/navbar.html :: myNavbar"> </header>
+	<div class="container div-center" style="padding-top: 20px">
+		<h2 style="text-align:center"><strong>Current Orders</strong></h2>
 	</div>
-	
-	<script th:src="@{/js/jquery.min.js}"></script>
-	<script th:src="@{/js/formToJson.min.js}"></script>
+	<div class="container div-center" style="padding-top: 10px">
+		<h4 style="text-align:left"><span>Shop: </span><strong id="shop">[[${shop}]]</strong></h4>
+	</div>
+	<div th:fragment="overview">
+		<div class="container div-center">
+			<table id="orderTable" class="table table-striped"
+				style="width: 100%">
+				<thead>
+					<tr>
+						<th>Nr</th>
+						<th>Table</th>
+						<th>Order</th>
+						<th>Price €</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
 	
 	<!-- refresh script -->
 	<script>
-		var set_delay = 2000;
-		var tableId = document.getElementById("orderTable");
-	    callout = function () {
-	        $.ajax({
-	            "url": "/api/shop/"+ document.getElementById("shop").innerHTML +"/table/-1/order",
-	            "type": "GET",
-	            "dataType": "json",
-	            "contentType": "application/json",
-	            "data": null
-	        })
-	        .fail(function (jqXHR, textStatus, errorThrown) {
-	        	alert("Connection to ordering service lost");
-	        })
-	        .done(function (response) {
-	        	var event_data = '';
-	        	$("#orderTable").find("tr:gt(0)").remove();;
-	            $.each(response, function(index, value){
-	            	if(value.isOpen == true) {
-	            		if(index % 2 == 0) {
-	            			event_data += '<tr onclick="showAlert(' + value.nr + ')" style="cursor: pointer" bgcolor="#D8D8D8">';
-	            		} else {
-	            			event_data += '<tr onclick="showAlert(' + value.nr + ')" style="cursor: pointer" bgcolor="white">';
-	            		}
-	            	} else if(value.isOpen == false) {
-		                event_data += '<tr onclick="showAlert(' + value.nr + ')" style="cursor: pointer" bgcolor="lightsalmon">';
-	            	}
-	                event_data += '<td>'+value.nr+'</td>';
-	                event_data += '<td>'+value.table.name+'</td>';
-	                
-	                event_data += '<td>';
-	                $.each(value.orderPos, function(i , val){
-	                	event_data += val.item.name + ': ' + val.amount + '\n';
-	                });
-	                event_data += '</td>';
-	                event_data += '<td>'+value.price+' €'+'</td>';
-	                event_data += '';
-	                event_data += '';
-	                event_data += '</tr>';
-	            });
-	            $("#orderTable").append(event_data);
-	        })
-	        .always(function () {
-	            setTimeout(callout, set_delay);
-	        });
-	    };
-	
-	// initial call
-	callout();
+		var shop = '[[${shop}]]';
+		$(document).ready(
+			refreshOrders(
+				$("#orderTable"),
+				shop,
+				-1,
+				0,
+				2000 
+			)
+		);
 	</script>
-	
-	<!-- Make table row deleteable -->
-	<script type="text/javascript">
-	showAlert = function(index) {
-		console.log(index)
-		if(confirm("Do you want to delete the order with id: " + index + "?")) {
-			var xhr = $.ajax({
-	            "url": "/api/"+ document.getElementById("shop").innerHTML + "/order/" + index,
-	            "type": "DELETE",
-	            "dataType": "json",
-	            "contentType": "application/json",
-	            "data": null,
-	            success: function(result) {
-	            	alert(xhr.getResponseHeader("Order"));
-	            },
-	        	error: function(result) {
-	            	alert(result.getResponseHeader("Order"));
-	        	}
-	        });
-		}
-	}
-	</script>
-
 </div>
 
 </body>

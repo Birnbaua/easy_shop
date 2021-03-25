@@ -2,12 +2,16 @@ package com.birnbaua.easyshop.service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import com.birnbaua.easyshop.repository.OrderPosRepository;
 import com.birnbaua.easyshop.repository.OrderRepository;
 import com.birnbaua.easyshop.shop.Shop;
 import com.birnbaua.easyshop.shop.ShopTable;
@@ -20,6 +24,9 @@ public class OrderService extends JpaService<Order,OrderId>{
 	
 	@Autowired
 	private OrderRepository or;
+	
+	@Autowired
+	private OrderPosRepository opr;
 	
 	@Autowired
 	private ItemService is;
@@ -44,6 +51,8 @@ public class OrderService extends JpaService<Order,OrderId>{
 		}
 	}
 	
+	
+	
 	public long countOpenOrders(String shop) {
 		return or.countOpenOrders(shop);
 	}
@@ -53,19 +62,23 @@ public class OrderService extends JpaService<Order,OrderId>{
 	}
 	
 	public List<Order> findOpenOrders(String shop, Pageable page) {
-		return or.findOpenOrders(shop);
+		return or.findOpenOrders(shop,page).toList();
 	}
 	
 	public List<Order> findOpenOrders(String shop, Timestamp time, Pageable page) {
-		return or.findOpenOrders(shop, time, page);
+		return or.findOpenOrders(shop, time, page).toList();
 	}
 	
 	public List<Order> findOpenOrders(String shop, Integer table, Pageable page) {
-		return or.findOpenOrders(new ShopTable(new Shop(shop),table),page);
+		return or.findOpenOrders(new ShopTable(new Shop(shop),table),page).toList();
 	}
 	
 	public List<Order> findOpenOrders(String shop, Integer table, Timestamp time, Pageable page) {
-		return or.findOpenOrders(new ShopTable(new Shop(shop),table), time, page);
+		return or.findOpenOrders(new ShopTable(new Shop(shop),table), time, page).toList();
+	}
+	
+	public List<Order> findAll(Pageable page) {
+		return or.findAll(page).toList();
 	}
 	
 	public List<Order> getOpenOrders() {
@@ -98,6 +111,16 @@ public class OrderService extends JpaService<Order,OrderId>{
 	@Override
 	public JpaRepository<Order, OrderId> getRepository() {
 		return or;
+	}
+
+	public void deleteInBatch(String shop, int size) {
+		Page<Order> page = null;
+		int nr = 0;
+		do {
+			page = or.findOrders(shop,PageRequest.of(nr++, size));
+			opr.deleteInBatch(page.stream().flatMap(x -> x.getOrderPos().stream()).collect(Collectors.toList()));
+			this.deleteInBatch(page.toList());
+		}while(page.isLast() == false);
 	}
 
 }

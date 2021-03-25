@@ -1,6 +1,9 @@
 package com.birnbaua.easyshop.controller;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.birnbaua.easyshop.log.LoggingHelper;
 import com.birnbaua.easyshop.service.ShopService;
+import com.birnbaua.easyshop.service.ShopTableService;
 import com.birnbaua.easyshop.shop.Shop;
+import com.birnbaua.easyshop.shop.ShopTable;
 
 @RestController
 @RequestMapping("/api/shop")
@@ -33,18 +38,33 @@ public class ShopControllerRest {
 	@Autowired
 	private ShopService ss;
 	
+	@Autowired
+	private ShopTableService sts;
+	
 	@PostMapping
 	@PreAuthorize("isAuthenticated() AND hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Shop> createShop(@RequestBody Shop shop, HttpServletRequest request) {
 		String msg = null;
 		try {
+			boolean isExisting = false;
+			if(ss.findById(shop.getName()) != null) {isExisting = true;}
 			ss.save(shop);
+			if(isExisting == false) {
+				AtomicInteger i = new AtomicInteger(0);
+				sts.saveAll(Arrays.stream(new Integer[15])
+						.map(x -> {
+							ShopTable s = new ShopTable(shop,i.incrementAndGet());
+							s.setName("Table " + i.get());
+							return s;
+						}).collect(Collectors.toList()));
+			}
 			msg = "New shop: " + shop.getName() + " with owner " + shop.getOwner() + " created.";
 			LOG.info(msg);
 		} catch(Exception e) {
 			msg = "Something went wrong while creating the new shop: " + shop.getName() +". Error message: " + e.getMessage();
 			LOG.error(msg);
 			LoggingHelper.logStackTrace(LOG, e);
+			e.printStackTrace();
 			return ResponseEntity.badRequest().header("Shop", msg).body(shop);
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).header("Shop", msg).body(shop);
@@ -131,6 +151,7 @@ public class ShopControllerRest {
 			msg = "Something went wrong while deleting the shop: " + id +". Error message: " + e.getMessage();
 			LOG.error(msg);
 			LoggingHelper.logStackTrace(LOG, e);
+			e.printStackTrace();
 			return ResponseEntity.badRequest().header("Shop", msg).body(shop);
 		}
 		return ResponseEntity.status(HttpStatus.OK).header("Shop", msg).body(shop);

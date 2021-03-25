@@ -43,7 +43,7 @@ public class Order extends BaseEntity<Order,OrderId> {
 	@Column(name = "total_price_at_purchasetime")
 	private Double price;
 	
-	@OneToMany(cascade = {CascadeType.ALL})
+	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE,CascadeType.REMOVE}, orphanRemoval = true)
 	@JoinColumns({
 		@JoinColumn(name = "shop_id", referencedColumnName = "shop_id"),
 		@JoinColumn(name = "order_nr", referencedColumnName = "order_nr"),

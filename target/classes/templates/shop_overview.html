@@ -12,34 +12,40 @@
 </head>
 <body>
 <!-- space for description etc. -->
-<div th:fragment="overview">
-	<div class="container">
-	    <div class="row">
-	        <div class="col-lg-10 mt-5 mb-5">
-	            <table id="shopTable" class="table table-striped" style="width: 100%">
-	                <colgroup>
-				       <col span="1" style="width: 30%;">
-				       <col span="1" style="width: 70%;">
-				    </colgroup>
-	                <thead>
-		                <tr>
-		                    <th>Name</th>
-		                    <th>Description</th>
-		                </tr>
-		                <tr th:each="shop,iStat : ${shops}" th:style="${iStat.even} ? 'background: white' : 'background: #D8D8D8'">
-		                	<td > 
-		                		<a th:href="'/shop/' + ${shop.name}">
-		                			[[${shop.name}]]
-		                		</a>
-		                	</td>
-		                	<td>[[${shop.desc}]]</td>
-		                </tr>
-	                </thead>
-	            </table>
-	        </div>
-	    </div>
+
+	<div class="container div-center" style="padding-top: 20px">
+		<h2 style="text-align:center"><strong>Shop Overview</strong></h2>
 	</div>
-</div>
+	<div class="container div-center" style="padding-top: 10px">
+		<h5 style="text-align:left"><span>A brief overview of all shops currently avaliable...</span></h5>
+	</div>	
+	<div class="container div-center" style="padding-top: 10px">
+		<p style="text-align:left"><span>This page has been written by Birnbaua. If you are interested in using it or helping in development, contact me via Github!</span></p>
+	</div>
+	<div th:fragment="overview">
+		<div class="container div-center">
+	    	<table id="shopTable" class="table table-striped" style="width: 100%">
+	        	<colgroup>
+					<col span="1" style="width: 30%;">
+				    <col span="1" style="width: 70%;">
+				</colgroup>
+	            <thead>
+		            <tr>
+		            	<th>Name</th>
+		                <th>Description</th>
+		            </tr>
+		            <tr th:each="shop,iStat : ${shops}" th:style="${iStat.even} ? 'background: white' : 'background: #D8D8D8'">
+		            	<td > 
+		                	<a th:href="'/shop/' + ${shop.name}">
+		                		[[${shop.name}]]
+		                	</a>
+		            	</td>
+		            	<td>[[${shop.desc}]]</td>
+		       	    </tr>
+				</thead>
+			</table>
+		</div>
+	</div>
 
 </body>
 </html>

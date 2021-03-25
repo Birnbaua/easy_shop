@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import com.birnbaua.easyshop.auth.User;
@@ -38,18 +39,6 @@ public class Shop extends BaseEntity<Shop,String> {
 	@ManyToOne
 	@JoinColumn(name = "shop_owner", nullable = true)
 	private User owner;
-	
-	@OneToMany()
-	@JoinColumn(name = "shop_id")
-	private List<Item> items = new LinkedList<>();
-	
-	@OneToMany()
-	@JoinColumn(name = "shop_id")
-	private List<Order> orders = new LinkedList<>();
-	
-	@OneToMany()
-	@JoinColumn(name = "shop_id")
-	private List<ShopTable> tables = new LinkedList<>();
 	
 	@JsonIgnore
 	@ManyToOne
@@ -92,33 +81,6 @@ public class Shop extends BaseEntity<Shop,String> {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	@JsonIgnore
-	public List<ShopTable> getTables() {
-		return tables;
-	}
-
-	public void setTables(List<ShopTable> tables) {
-		this.tables = tables;
-	}
-
-	@JsonIgnore
-	public List<Item> getItems() {
-		return items;
-	}
-
-	public void setItems(List<Item> items) {
-		this.items = items;
-	}
-	
-	@JsonIgnore
-	public List<Order> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
 	}
 	
 	public String getDesc() {

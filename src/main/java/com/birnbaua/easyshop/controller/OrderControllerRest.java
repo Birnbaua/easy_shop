@@ -102,6 +102,7 @@ public class OrderControllerRest {
 					orders = os.findOpenOrders(shop,table,PageRequest.of(page, pageSize));
 				}
 			}
+			//orders = os.findAll(PageRequest.of(0, pageSize));
 		} catch(Exception e) {
 			e.printStackTrace();
 			LOG.error(e.getMessage());
