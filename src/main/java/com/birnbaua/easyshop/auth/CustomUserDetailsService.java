@@ -32,6 +32,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 		return userRepository.findByUsername(username).orElseGet(null);
 	}
 	
+	public User findByUsername(String username) {
+		Optional<User> user = userRepository.findById(username);
+		if(user.isPresent()) {
+			return user.get();
+		} else {
+			return null;
+		}
+	}
+	
 	public User save(User user) {
 		return userRepository.save(user);
 	}

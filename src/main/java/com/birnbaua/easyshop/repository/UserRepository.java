@@ -10,7 +10,7 @@ import com.birnbaua.easyshop.auth.User;
 import com.birnbaua.easyshop.auth.UserRole;
 
 
-public interface UserRepository extends JpaRepository<User,Integer> {
+public interface UserRepository extends JpaRepository<User,String> {
 	
 	public Optional<User> findByUsername(String username);
 	
