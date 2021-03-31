@@ -55,6 +55,74 @@ public class ShopConfig extends BaseEntity<ShopConfig,Integer> implements Serial
 	public ShopConfig() {
 	}
 	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getMaxTables() {
+		return maxTables;
+	}
+
+	public void setMaxTables(Integer maxTables) {
+		this.maxTables = maxTables;
+	}
+
+	public Integer getMaxItems() {
+		return maxItems;
+	}
+
+	public void setMaxItems(Integer maxItems) {
+		this.maxItems = maxItems;
+	}
+
+	public Timestamp getStartsAt() {
+		return startsAt;
+	}
+
+	public void setStartsAt(Timestamp startsAt) {
+		this.startsAt = startsAt;
+	}
+
+	public Timestamp getExpiresAt() {
+		return expiresAt;
+	}
+
+	public void setExpiresAt(Timestamp expiresAt) {
+		this.expiresAt = expiresAt;
+	}
+
+	public Boolean getHasLoggingEnabled() {
+		return hasLoggingEnabled;
+	}
+
+	public void setHasLoggingEnabled(Boolean hasLoggingEnabled) {
+		this.hasLoggingEnabled = hasLoggingEnabled;
+	}
+
+	public Integer getMaxNrOfOrdersPerTable() {
+		return maxNrOfOrdersPerTable;
+	}
+
+	public void setMaxNrOfOrdersPerTable(Integer maxNrOfOrdersPerTable) {
+		this.maxNrOfOrdersPerTable = maxNrOfOrdersPerTable;
+	}
+
+	public BigDecimal getMaxSalesValuePerOrder() {
+		return maxSalesValuePerOrder;
+	}
+
+	public void setMaxSalesValuePerOrder(BigDecimal maxSalesValuePerOrder) {
+		this.maxSalesValuePerOrder = maxSalesValuePerOrder;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof ShopConfig) {

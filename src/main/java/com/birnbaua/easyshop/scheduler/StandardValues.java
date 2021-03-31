@@ -1,8 +1,5 @@
 package com.birnbaua.easyshop.scheduler;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -11,14 +8,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import com.birnbaua.easyshop.auth.CustomUserDetailsService;
 import com.birnbaua.easyshop.auth.User;
 import com.birnbaua.easyshop.auth.UserRole;
-import com.birnbaua.easyshop.controller.ItemControllerRest;
-import com.birnbaua.easyshop.controller.ShopControllerRest;
-import com.birnbaua.easyshop.controller.ShopTableControllerRest;
 import com.birnbaua.easyshop.service.ItemService;
+import com.birnbaua.easyshop.service.ShopConfigService;
 import com.birnbaua.easyshop.service.ShopService;
 import com.birnbaua.easyshop.service.ShopTableService;
 import com.birnbaua.easyshop.shop.Shop;
 import com.birnbaua.easyshop.shop.ShopTable;
+import com.birnbaua.easyshop.shop.config.ShopConfig;
 import com.birnbaua.easyshop.shop.item.Item;
 
 @EnableScheduling
@@ -37,6 +33,9 @@ public class StandardValues {
 	@Autowired
 	private ShopTableService sts;
 	
+	@Autowired
+	private ShopConfigService scs;
+	
 	@Scheduled(initialDelay=1000, fixedDelay = 365*24*60*60*1000)
 	public void createAdminAcc() {
 		if(us.findByUsername("admin") == null) {
@@ -45,11 +44,18 @@ public class StandardValues {
 			user.setPassword("password");
 			user.getRoles().add(UserRole.ADMIN);
 			us.initSave(user);
+			createTestShop();
+			createConfig();
 		}
 	}
 	
-	@Scheduled(initialDelay = 1000, fixedDelay = 365*24*60*60*1000)
-	public void createTestShop() {
+	private void createConfig() {
+		ShopConfig config = new ShopConfig();
+		config.setId(0);
+		scs.save(config);
+	}
+	
+	private void createTestShop() {
 		Shop shop = new Shop();
 		shop.setName("Test Shop");
 		shop.setTitle("Your Shoptitle");
