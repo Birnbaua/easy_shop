@@ -15,7 +15,7 @@
 			<!-- 
 			  <a class="navbar-brand" th:href="${shop != null} ? '/about' : '/admin'" id="shop">[[${shop != null} ? ${shop} : 'Admin']]</a>
 			-->
-			  <a class="navbar-brand" href="/admin">Admin</a>
+			  <a class="navbar-brand" href="/admin">Home</a>
 			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			    <span class="navbar-toggler-icon"></span>
 			  </button>
@@ -26,6 +26,9 @@
 			      </li>
 			      <li class="nav-item" th:if="${shop} != null">
 			        <a class="nav-link" th:href="@{'/admin/'+ ${shop} +'/items'}">Items</a>
+			      </li>
+			      <li class="nav-item" th:if="${shop} != null">
+			        <a class="nav-link" th:href="@{'/admin/'+ ${shop} +'/tables'}">Tables</a>
 			      </li>
 			      <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
 			        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -39,12 +39,16 @@ public class ShopTableControllerRest {
 	private ShopService ss;
 	
 	@PostMapping
-	@PreAuthorize("isAuthenticated() && hasRole('ROLE_ADMIN')")
-	public ResponseEntity<ShopTable> postTable(@PathVariable String shop, @RequestBody ShopTable table) {
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<ShopTable> postTable(@PathVariable String shop, @RequestBody ShopTable table, HttpServletRequest request) {
 		String msg = null;
 		try {
-			table.setShop(new Shop(shop));
-			table = sts.save(table);
+			if(isAuthorizedToManipulate(shop,request)) {
+				table.setShop(new Shop(shop));
+				table = sts.save(table);
+			} else {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("Table", "You are not authorized to create a table.").body(null);
+			}
 			msg = "Created new table: " + table.getName() + " with table number: " + table.getNr() + ".";
 			LOG.info(msg);
 		} catch(Exception e) {

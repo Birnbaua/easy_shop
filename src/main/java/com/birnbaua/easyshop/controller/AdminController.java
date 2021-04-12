@@ -54,6 +54,19 @@ public class AdminController {
 		}
 	}
 	
+	@GetMapping("/{name}/tables")
+	public String tables(@PathVariable String name, Model model, HttpServletRequest request) {
+		model.addAttribute("shop",name);
+		try {
+			if(isAuthorized(name,request)) {
+				return "shopTable_overview";
+			}
+			return "redirect:/login";
+		} catch(NullPointerException e) {
+			return "error";
+		}
+	}
+	
 	private boolean isAuthorized(String shop, HttpServletRequest request) throws NullPointerException {
 		if(request.isUserInRole("ROLE_ADMIN")) {
 			return true;

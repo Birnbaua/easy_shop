@@ -44,9 +44,9 @@ public class StandardValues {
 			user.setPassword("password");
 			user.getRoles().add(UserRole.ADMIN);
 			us.initSave(user);
-			createTestShop();
-			createConfig();
 		}
+		createTestShop();
+		createConfig();
 	}
 	
 	private void createConfig() {
